@@ -57,3 +57,22 @@ public class DiscreteServo<D extends DiscreteServo.DiscreteServoPosition> implem
         return discreteServoPosition.name();
     }
 }
+/*
+    Sample for Hardware Map
+*/
+    /*public enum AngleServoPosition implements DiscreteServo.DiscreteServoPosition {
+        POSITION_1(0.8),
+        POSITION_2(0.8),
+        POSITION_3(0.75),
+        POSITION_4(0.85);
+
+        private final double position;
+
+        AngleServoPosition(double position) {
+            this.position = position;
+        };
+
+        @Override
+        public double getPosition() {
+            return position;
+        };    }*/

@@ -44,7 +44,7 @@ public class RangeAutoDriver extends AutoDriver {
         encoderAutoDriver = new EncoderAutoDriver(hw, linearOpMode);
         this.hw = hw;
     }
-
+    /*
     public void squareUpToWall(double distance, double power) {
         setupMotion("Squaring up to a wall.");
 
@@ -76,4 +76,6 @@ public class RangeAutoDriver extends AutoDriver {
         encoderAutoDriver.driveToDistance((distanceToDrive - correctionFactor) / 2.54);
         endMotion();
     }
+    
+     */
 }

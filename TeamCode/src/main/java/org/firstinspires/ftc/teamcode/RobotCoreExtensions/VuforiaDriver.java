@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RobotCoreExtensions;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -12,15 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaBase;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-import java.text.DateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class VuforiaDriver implements AutoCloseable {
     private final VuforiaBase vuforia;
@@ -81,8 +75,7 @@ public class VuforiaDriver implements AutoCloseable {
      *
      * @return The location of the robot (position and orientation)
      */
-    public RobotLocation getRobotPosition() throws PositionCalculationException {
-//            if (robotPoseAndAssociatedMarker.robotPose.isUpdatedRobotLocation) {
+    public Location getRobotLocation() throws PositionCalculationException {
         List<RobotPoseAndAssociatedMarker> robotPoseData = new ArrayList<>();
         for (String name : trackableNames) {
             RobotPoseAndAssociatedMarker robotPoseAndAssociatedMarker = new RobotPoseAndAssociatedMarker(vuforia.track(name), vuforia.trackPose(name));
@@ -104,8 +97,6 @@ public class VuforiaDriver implements AutoCloseable {
                     "available position data, there were no poses available from which a " +
                     "position could be calculated");
         }
-
-//        return robotPoseData.get(robotPoseData.size()-1).robotPose.matrix;
 
         final float scalingFactor = 0.8F;
         final float geometricSumReciprocal = (float)
@@ -133,14 +124,28 @@ public class VuforiaDriver implements AutoCloseable {
         final Position position = new Position(DistanceUnit.MM, positionVector.get(0), positionVector.get(1), positionVector.get(2), 0);
         final Orientation orientation = Orientation.getOrientation(acc, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-        return new RobotLocation(position, orientation);
+        return new Location(position, orientation);
     }
 
-    public static class RobotLocation {
+    public Location getTrackableLocation(String trackableName) {
+        final VuforiaBase.TrackingResults trackingResults = vuforia.trackPose(trackableName);
+        final VectorF positionVector = trackingResults.matrix.getTranslation();
+        final Position position = new Position(DistanceUnit.MM, positionVector.get(0), positionVector.get(1), positionVector.get(2), 0);
+        final Orientation orientation = Orientation.getOrientation(trackingResults.matrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+        return new Location(position, orientation);
+    }
+
+    public boolean isVisible(String trackableName) {
+        final VuforiaBase.TrackingResults trackingResults = vuforia.trackPose(trackableName);
+        return trackingResults.isVisible;
+    }
+
+    public static class Location {
         final Position position;
         final Orientation orientation;
 
-        public RobotLocation(Position position, Orientation orientation) {
+        public Location(Position position, Orientation orientation) {
             this.position = position;
             this.orientation = orientation;
         }
@@ -156,7 +161,7 @@ public class VuforiaDriver implements AutoCloseable {
         @Override
         public String toString() {
             final String orientationString = String.format(Locale.getDefault(), "{%.0f %.0f %.0f}", this.orientation.firstAngle, this.orientation.secondAngle, this.orientation.thirdAngle);
-            return "RobotLocation{" +
+            return "Location{" +
                     "position=" + position.toUnit(DistanceUnit.INCH) +
                     ", orientation=" + orientationString +
                     '}';

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotConfiguration.Skystone.SkystoneRobot;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
  */
 
 @Autonomous (group = "Blue" )
+@Disabled
 public class RoverDepotAuto extends LinearOpMode {
 
     @Override
@@ -39,7 +41,7 @@ public class RoverDepotAuto extends LinearOpMode {
         skystoneRobot.initialize();
 
         waitForStart();
-
+        /*
         encoderAutoDriver.setPower(1.0);
 
         while(!skystoneRobot.latch.isFullyExtended())
@@ -48,7 +50,6 @@ public class RoverDepotAuto extends LinearOpMode {
             telemetry.addData("Latch state", skystoneRobot.latch.toString());
             telemetry.update();
         }
-
         //This is copy and pasted from RoverDepotAuto.java, the original code is commented out
         skystoneRobot.latch.manualStop();
         encoderAutoDriver.setPower(0.75);
@@ -83,5 +84,7 @@ public class RoverDepotAuto extends LinearOpMode {
         encoderAutoDriver.driveToDistance(-50);
         //skystoneRobot.markerServo.open();
         encoderAutoDriver.driveToDistance(1.0);
+
+       */
     }
 }

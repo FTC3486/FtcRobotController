@@ -41,152 +41,121 @@ public class EncoderAutoDriver extends AutoDriver {
         drivetrain = hw.getDrivetrain();
     }
 
-    // Function - driveLeftSideToDistance
-    // Drives the left side forwards of backwards converting our inches input to counts while the OpMode is active
-    // using the power variable for speed control.
-    // Distance in inches to one decimal place.
-    // Input – number, positive to move forward or negative to go backwards.   Example (4) 4 inches forward,
-    // (-8) eight inches backwards.
+    // Function - turnRight
+    // Drives the left side and right side of the robot to turn to the right until the distanceInInches
+    // is reached by the left motor encoders.
+    //
+    // Input – distanceInInches = the distance given in inches that the left motors will drive to
+    //         leftPower = the power given to drive the left motors
+    //         rightPower = the power given to drive the right motors
+    //
+    // Example: turnRight(12, 1.0, 0.5) -> drives until the left side of the robot has driven 12 inches
+    // with the left motors set at 1.0 power and the right motors set at 0.5 power. This performs
+    // a wide, sweeping turn.
+    //
+    // Example: turnRight(12, 1.0, -0.5) -> drives until the left side of the robot has driven 12 inches
+    // with the left motors set at 1.0 power and the right motors set at -0.5 power. This performs a swivel turn.
+    public void turnRight(double distanceInInches, double leftPower, double rightPower) {
+        setupMotion("Turning right");
 
-    public void driveLeftSideToDistance(double distance) {
-        setupMotion("Driving to set distance.");
+        if(leftPower > 0) {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
 
-       if (distance > 0) {
-           hw.getDrivetrain().setPowers(power, 0.0);
+            while(drivetrain.getLeftEncoderCount() < drivetrain.convertInchesToEncoderCounts(distanceInInches)
+                    && opMode.opModeIsActive()) {}
+        }
+        else {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
 
-           while (drivetrain.getLeftEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
-                   && opMode.opModeIsActive()) {
-               opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-               opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-               opMode.telemetry.update();
-           }
-       }else {
-           hw.getDrivetrain().setPowers(-power, 0.0);
-
-           while (drivetrain.getLeftEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
-                       && opMode.opModeIsActive()) {
-               opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-               opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-               opMode.telemetry.update();
-               }
-           }
-            endMotion();
-    }
-
-    // Function - driveRightSideToDistance
-    // Drives the right side forwards of backwards converting our inches input to counts while the OpMode is active
-    // using the power variable for speed control.
-    // Distance in inches to one decimal place.
-    // Input – number, positive to move forward or negative to go backwards.   Example (4) 4 inches forward,
-    // (-8) eight inches backwards.
-
-    public void driveRightSideToDistance(double distance) {
-        setupMotion("Driving to set distance.");
-
-        if (distance > 0) {
-
-            drivetrain.setPowers(0.0, power);
-
-            while (drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
-                    && opMode.opModeIsActive()) {
-                opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-                opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-                opMode.telemetry.update();
-            }
-
-        }else {
-
-            drivetrain.setPowers(0.0, -power);
-
-            while (drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
-                    && opMode.opModeIsActive()) {
-                opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-                opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-                opMode.telemetry.update();
-            }
+            while(drivetrain.getLeftEncoderCount() > drivetrain.convertInchesToEncoderCounts(distanceInInches)
+                    && opMode.opModeIsActive()) {}
         }
         endMotion();
     }
 
+    // Function - turnLeft
+    // Drives the left side and right side of the robot to turn to the left until the distanceInInches
+    // is reached by the right motor encoders.
+    //
+    // Input – distanceInInches = the distance given in inches that the right motors will drive to
+    //         leftPower = the power given to drive the left motors
+    //         rightPower = the power given to drive the right motors
+    //
+    // Example: turnLeft(12, 0.5, 1.0) -> drives until the right side of the robot has driven 12 inches
+    // with the left motors set at 0.5 power and the right motors set at 1.0 power. This performs
+    // a wide, sweeping turn.
+    //
+    // Example: turnLeft(12, -0.5, 1) -> drives until the right side of the robot has driven 12 inches
+    // with the left motors set at -0.5 power and the right motors set at 1.0 power. This performs a swivel turn.
+    public void turnLeft(double distance, double leftPower, double rightPower) {
+        setupMotion("Turning left");
+
+        if(rightPower > 0) {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        }
+        else {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        }
+        endMotion();
+    }
 
     // Function - driveToDistance
     // Drives both sides straight forwards or backwards converting our inches input to counts while the OpMode is active
     // using the power variable for speed control.
-    // Distance in inches to one decimal place.
-    // Input – number, positive to move forward or negative to go backwards.   Example (4) 4 inches forward,
-    // (-8) eight inches backwards.
-
-
-    public void driveToDistance(double distance) {
+    //
+    // Input – distance = the distance given in inches that we want to drive in a straight line
+    //       - leftAndRightPower = the motor power to apply to both the left and right sides of the robot
+    //
+    // Example driveToDistance(5, 1) = drive the robot straight for 5 inches at power = 1
+    // driveToDistance(-5, 1) = drive the robot in reverse in a straight line for 5 inches at power = 1
+    public void driveToDistance(double distance, double leftAndRightPower) {
         setupMotion("Driving to set distance.");
 
         if (distance > 0) {
-            drivetrain.setPowers(power, power);
+            drivetrain.setPowers(leftAndRightPower, leftAndRightPower);
             while (drivetrain.getLeftEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
-                    //&& drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
-                    && opMode.opModeIsActive()) {
-                opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-                opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-                opMode.telemetry.update();
-            }
+                    && opMode.opModeIsActive()) {}
+
         } else {
-            drivetrain.setPowers(-power, -power);
+            drivetrain.setPowers(-leftAndRightPower, -leftAndRightPower);
             while (drivetrain.getLeftEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
-                    //&& drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
-                    && opMode.opModeIsActive()) {
-                opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-                opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-                opMode.telemetry.update();
-            }
+                    && opMode.opModeIsActive()) {}
         }
         endMotion();
     }
 
-
-        // Function - spinRight
-    // Spins the robot right using both left and right motors converting our inches input to counts
-    // while the OpMode is active using the power variable for speed control.
-    // Distance in inches to one decimal place.
-    // Input (?,?) – The first number is the left motor distance and the second is the right motor distance.
-    // First number is positive to move the left side forward. the second number is negative to drive the right side backwards.
-    // Standard turns 90 degrees (10,-10),  180 turn (22,-22)
-    // Distances will need adjusted based on power and weight of the robot.
-
-    public void spinRight(double leftInches, double rightInches) {
-        setupMotion("Spinning set amount");
-        drivetrain.setPowers(power, -power);
-
-        while (drivetrain.getLeftEncoderCount() < drivetrain.convertInchesToEncoderCounts(leftInches)
-                && drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(rightInches)
-                && opMode.opModeIsActive()){
-            opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-            opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-            opMode.telemetry.update();
-        }
-        endMotion();
+    // Function - spinClockwise
+    // Spins the robot clockwise by applying the same magnitude of motor power to either
+    // side of the robot until the leftInches distance is reached by the left side of the robot.
+    //
+    // Input - distance = the distance given in inches that we want the left side of the robot to spin
+    //       - leftPower = the power that we want to give the left side of the robot. This is also used to
+    //                     set the right power.
+    //
+    // Examples - spinClockwise(7, 1) - Spin the robot clockwise at power = 1 until the left
+    //             side of the robot has traveled 7 inches.
+    public void spinClockwise(double distanceInInches, double leftPower) {
+        turnRight(distanceInInches, leftPower, -leftPower);
     }
 
-    // Function - spinLeft
-    // Spins the robot left using both left and right motors converting our inches input to counts
-    // while the OpMode is active using the power variable for speed control.
-    // Distance in inches to one decimal place.
-    // Input (?,?) – The first number is the left motor distance and the second is the right motor distance.
-    // First number is negative to move the left side backwards. the second number is positive to drive the left side forward.
-    // Standard turns 90 degrees (10,-10),  180 turn (22,-22)
-    // Distances will need adjusted based on power and weight of the robot.
-
-    public void spinLeft(double leftInches, double rightInches) {
-        setupMotion("Spinning set amount");
-        drivetrain.setPowers(-power, power);
-
-        while (drivetrain.getLeftEncoderCount() > drivetrain.convertInchesToEncoderCounts(leftInches)
-                && drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(rightInches)
-                && opMode.opModeIsActive()) {
-            opMode.telemetry.addData("LeftEncoderCount: ", drivetrain.getLeftEncoderCount());
-            opMode.telemetry.addData("RightEncoderCount: ", drivetrain.getRightEncoderCount());
-            opMode.telemetry.update();
-        }
-        endMotion();
+    // Function - spinCounterclockwise
+    // Spins the robot counterclockwise by applying the same magnitude of motor power to either
+    // side of the robot until the rightInches distance is reached by the right side of the robot.
+    //
+    // Input - distance = the distance given in inches that we want the left side of the robot to spin
+    //       - rightPower = the power that we want to give the right side of the robot. This is also used to
+    //                     set the left power.
+    //
+    // Examples - spinCounterclockwise(7, 1) - Spin the robot clockwise at power = 1 until the right
+    //             side of the robot has traveled 7 inches.
+    public void spinCounterclockwise(double distance, double rightPower) {
+        turnLeft(distance, -rightPower, rightPower);
     }
 }
 
