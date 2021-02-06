@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotConfiguration.Skystone;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.RobotCoreExtensions.ContinuousServo;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivetrain;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Initializable;
-import org.firstinspires.ftc.teamcode.Subsystems.DiscreteServo;
 import org.firstinspires.ftc.teamcode.Subsystems.Latch;
 import org.firstinspires.ftc.teamcode.Subsystems.OpenCloseServo;
 import org.firstinspires.ftc.teamcode.Subsystems.ReversableMotor;

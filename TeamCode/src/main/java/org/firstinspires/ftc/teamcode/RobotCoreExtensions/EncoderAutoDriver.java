@@ -95,8 +95,7 @@ public class EncoderAutoDriver extends AutoDriver {
 
             while(drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
                     && opMode.opModeIsActive()) {}
-        }
-        else {
+        } else {
             hw.getDrivetrain().setPowers(leftPower, rightPower);
 
             while(drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
@@ -121,7 +120,6 @@ public class EncoderAutoDriver extends AutoDriver {
             drivetrain.setPowers(leftAndRightPower, leftAndRightPower);
             while (drivetrain.getLeftEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
                     && opMode.opModeIsActive()) {}
-
         } else {
             drivetrain.setPowers(-leftAndRightPower, -leftAndRightPower);
             while (drivetrain.getLeftEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
@@ -157,6 +155,35 @@ public class EncoderAutoDriver extends AutoDriver {
     public void spinCounterclockwise(double distance, double rightPower) {
         turnLeft(distance, -rightPower, rightPower);
     }
+    public void coast(double distance, double leftPower, double rightPower) {
+        setupMotion("Turning left");
+
+        if (rightPower > 0) {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        } else {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        }
+    }
+    public void coastStop(double distance, double leftPower, double rightPower) {
+        setupMotion("Turning left");
+
+        if (rightPower > 0) {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() < drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        } else {
+            hw.getDrivetrain().setPowers(leftPower, rightPower);
+
+            while(drivetrain.getRightEncoderCount() > drivetrain.convertInchesToEncoderCounts(distance)
+                    && opMode.opModeIsActive()) {}
+        }
+        endMotion();
+    }
 }
-
-

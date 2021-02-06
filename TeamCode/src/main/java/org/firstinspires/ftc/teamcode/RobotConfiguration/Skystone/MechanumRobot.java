@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotConfiguration.SkyStone;
+package org.firstinspires.ftc.teamcode.RobotConfiguration.Skystone;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;

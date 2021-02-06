@@ -1,0 +1,142 @@
+package org.firstinspires.ftc.teamcode.OpModes.Teleop;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.RobotConfiguration.UltimateGoal.UltimateGoalRobot;
+import org.firstinspires.ftc.teamcode.RobotCoreExtensions.GamepadWrapper;
+import org.firstinspires.ftc.teamcode.RobotCoreExtensions.InertialMeasurementUnit;
+import org.firstinspires.ftc.teamcode.RobotCoreExtensions.TeleopDriver;
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.ExpansionHubMotor;
+import org.openftc.revextensions2.RevBulkData;
+
+@TeleOp (name = "Ultimate Goal Teleop 2", group = "Teleop2020")
+public class UltimateGoalTeleop extends OpMode {
+    private UltimateGoalRobot ultimateGoalRobot;
+    //Create joysticks
+    private GamepadWrapper joy1 = new GamepadWrapper();
+    private GamepadWrapper joy2 = new GamepadWrapper();
+    private TeleopDriver teleopDriver;
+    ExpansionHubEx expansionHub;
+    RevBulkData bulkData;
+    ExpansionHubMotor leftf, leftr, rightf, rightr;
+    String shooterState = "";
+    @Override
+    public void init() {
+        ultimateGoalRobot = new UltimateGoalRobot(this.hardwareMap);
+        ultimateGoalRobot.initialize();
+        teleopDriver = new TeleopDriver(ultimateGoalRobot);
+        teleopDriver.setMinSpeed(0.2);
+        ultimateGoalRobot.initialize();
+        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+        //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
+        leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
+        //rightf = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightf");
+        rightr = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightr");
+    }
+
+    @Override
+    public void loop() {
+        //Gamepad 1 is the driver controller, gamepad 2 is the gunner controller
+        joy1.update(gamepad1);
+        joy2.update(gamepad2);
+
+        bulkData = expansionHub.getBulkInputData();
+
+        telemetry.addData("Test", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
+        // telemetry.addData("5v monitor", expansionHub.read5vMonitor(ExpansionHubEx.VoltageUnits.VOLTS)); //Voltage from the phone
+        // telemetry.addData("12v monitor", expansionHub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS)); //Battery voltage
+        //telemetry.addData("M3 velocity", bulkData.getMotorVelocity(rightr));
+        telemetry.addData("Module temp", expansionHub.getInternalTemperature(ExpansionHubEx.TemperatureUnits.FAHRENHEIT) + "F");
+        telemetry.addData("Module over temp", expansionHub.isModuleOverTemp());
+        telemetry.addData("Shooter", shooterState);
+        updateTelemetry(telemetry);
+
+        //Drivetrain*******************************************************
+
+        //Toggle Half Speed on the drivetrain
+        if (gamepad1.left_trigger > 0) {
+            // control the drive train at full speed
+            teleopDriver.setMaxSpeed(1f);
+        } else if (gamepad1.right_trigger>0){
+            teleopDriver.setMaxSpeed(.3f);
+        } else {
+            // control the drive train at 1/2 speed - Normal driving
+            teleopDriver.setMaxSpeed(.5f);
+        }
+
+        driveBackwardsToggle(joy1.toggle.right_bumper);
+
+        //PICKUP Functions ------------------------------------------------------------------------
+
+        if (gamepad2.dpad_left) {
+            ultimateGoalRobot.flapper.run(.99);
+            ultimateGoalRobot.belt.run(.99);
+        } else if (gamepad2.right_bumper) {
+            ultimateGoalRobot.flapper.reverse(-.99);
+           ultimateGoalRobot.belt.reverse(-.99);
+        } else {
+            ultimateGoalRobot.flapper.stop();
+            ultimateGoalRobot.belt.stop();
+        }
+        /*
+        //Test Thingie to make belt run in reverse
+        if(gamepad2.dpad_right){
+            ultimateGoalRobot.belt.run(0.99);
+        } else {
+            ultimateGoalRobot.belt.stop();
+        }
+        */
+
+        //Delivery Functions -----------------------------------------------------------------------
+        if (gamepad2.left_bumper) {
+            ultimateGoalRobot.ringServo.setPower(-0.99);
+            ultimateGoalRobot.belt.reverse(-0.99);
+        } else {
+            ultimateGoalRobot.ringServo.setPower(0);
+        }
+
+        if (joy2.toggle.y) {
+            ultimateGoalRobot.delivery1.reverse(-0.95);
+            ultimateGoalRobot.delivery2.reverse(0.95);
+            shooterState = "Maximum power";
+        } else if (joy2.toggle.a) {
+            ultimateGoalRobot.delivery1.reverse(-0.915);
+            ultimateGoalRobot.delivery2.reverse(0.915);
+            shooterState = "Reduced power";
+            // ultimateGoalRobot.ringServo.setPower(-0.99);
+        } else if (joy1.toggle.a) {
+                ultimateGoalRobot.delivery1.reverse(-0.85);
+                ultimateGoalRobot.delivery2.reverse(0.85);
+            shooterState = "Powershot power";
+        } else {
+                ultimateGoalRobot.delivery1.stop();
+                ultimateGoalRobot.delivery2.stop();
+            shooterState = "No power";
+        }
+
+
+
+        if (joy2.toggle.x) {
+        ultimateGoalRobot.armAngleServo.open();
+    }   else {
+        ultimateGoalRobot.armAngleServo.close();
+    }
+
+        if (joy2.toggle.b) {
+        ultimateGoalRobot.armGripServo.open();
+    }   else {
+        ultimateGoalRobot.armGripServo.close();
+    }
+    }
+
+    private void driveBackwardsToggle(boolean toggle) {
+        if (toggle) {
+            teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.FORWARD);
+        } else {
+            teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.BACKWARD);
+        }
+    }
+}
