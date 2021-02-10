@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,7 +17,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.ReversableMotor;
  * Created by 3486 on 10/10/2019.
  */
 
-@TeleOp(name = "Ultimate Goal Teleop", group = "Teleop2020")
+@TeleOp(name = "Ultimate Goal Mechanum Teleop", group = "Teleop2020")
+@Disabled
 public class UltimateGoalMechanumTeleop extends OpMode {
     //Declare parts of the robot that will be used by this Teleop
     // private UltimateGoalRobot ultimateGoalRobot = new UltimateGoalRobot(this.hardwareMap);

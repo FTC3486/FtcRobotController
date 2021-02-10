@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotConfiguration.Mechanum.MechanumRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.MechanumAutoDriver;
 
 @Autonomous (group = "Blue" )
+@Disabled
 public class MechanumTest extends LinearOpMode {
 
     @Override

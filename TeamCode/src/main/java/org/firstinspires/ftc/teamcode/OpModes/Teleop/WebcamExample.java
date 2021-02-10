@@ -37,7 +37,7 @@
           import org.openftc.easyopencv.OpenCvInternalCamera;
           import org.openftc.easyopencv.OpenCvPipeline;
 
-  @TeleOp
+  @TeleOp (name = "Webcam Teleop", group = "Teleop2020-21")
   public class WebcamExample extends LinearOpMode
   {
       OpenCvCamera webcam;

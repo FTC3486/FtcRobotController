@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.GamepadWrapper;
 
 @TeleOp(name = "Mechanum Drive Teleop", group = "Teleop")
+@Disabled
 public class MechanumDriveTeleop extends OpMode {
     private static final float CLOCKWISE_TURNING_SENSITIVITY = 0.75f;
 

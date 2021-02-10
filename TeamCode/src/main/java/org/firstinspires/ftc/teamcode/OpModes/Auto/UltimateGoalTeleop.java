@@ -43,8 +43,8 @@ import org.openftc.revextensions2.RevBulkData;
  *     -Created by Saatvik on 12/27/20.
  *     -
  */
-@Autonomous(group = "Blue")
-public class WebcamAutoTest extends LinearOpMode {
+@Autonomous(name = "Ultimate Goal Auto", group = "Blue")
+public class UltimateGoalTeleop extends LinearOpMode {
 
     OpenCvCamera webcam;
     SkystoneDeterminationPipeline pipeline;

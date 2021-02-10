@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.TeleopDriver;
  */
 
 @TeleOp(name = "Test Teleop", group = "Teleop2018")
+@Disabled
 public class TestTeleop extends OpMode {
     //Declare parts of the robot that will be used by this Teleop
     private Test test;

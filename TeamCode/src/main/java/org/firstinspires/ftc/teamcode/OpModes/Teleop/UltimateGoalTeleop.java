@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,7 +13,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
-@TeleOp (name = "Ultimate Goal Teleop 2", group = "Teleop2020")
+@TeleOp (name = "Ultimate Goal Teleop", group = "Teleop2020-21")
 public class UltimateGoalTeleop extends OpMode {
     private UltimateGoalRobot ultimateGoalRobot;
     //Create joysticks
@@ -99,12 +100,12 @@ public class UltimateGoalTeleop extends OpMode {
         }
 
         if (joy2.toggle.y) {
-            ultimateGoalRobot.delivery1.reverse(-0.95);
-            ultimateGoalRobot.delivery2.reverse(0.95);
+            ultimateGoalRobot.delivery1.reverse(-0.950);
+            ultimateGoalRobot.delivery2.reverse(0.950);
             shooterState = "Maximum power";
         } else if (joy2.toggle.a) {
-            ultimateGoalRobot.delivery1.reverse(-0.915);
-            ultimateGoalRobot.delivery2.reverse(0.915);
+            ultimateGoalRobot.delivery1.reverse(-0.900);
+            ultimateGoalRobot.delivery2.reverse(0.900);
             shooterState = "Reduced power";
             // ultimateGoalRobot.ringServo.setPower(-0.99);
         } else if (joy1.toggle.a) {
