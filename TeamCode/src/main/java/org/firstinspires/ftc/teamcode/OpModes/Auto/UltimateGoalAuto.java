@@ -44,7 +44,7 @@ import org.openftc.revextensions2.RevBulkData;
  *     -
  */
 @Autonomous(name = "Ultimate Goal Auto", group = "Blue")
-public class UltimateGoalTeleop extends LinearOpMode {
+public class UltimateGoalAuto extends LinearOpMode {
 
     OpenCvCamera webcam;
     SkystoneDeterminationPipeline pipeline;
