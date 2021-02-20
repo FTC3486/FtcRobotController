@@ -53,6 +53,8 @@ public class UltimateGoalTeleop extends OpMode {
         telemetry.addData("Module temp", expansionHub.getInternalTemperature(ExpansionHubEx.TemperatureUnits.FAHRENHEIT) + "F");
         telemetry.addData("Module over temp", expansionHub.isModuleOverTemp());
         telemetry.addData("Shooter", shooterState);
+        telemetry.addData("Delivery 1", ultimateGoalRobot.delivery1.getVelocity());
+        telemetry.addData("Delivery 2", ultimateGoalRobot.delivery2.getVelocity());
         updateTelemetry(telemetry);
 
         //Drivetrain*******************************************************
@@ -98,27 +100,25 @@ public class UltimateGoalTeleop extends OpMode {
         } else {
             ultimateGoalRobot.ringServo.setPower(0);
         }
-
-        if (joy2.toggle.y) {
-            ultimateGoalRobot.delivery1.reverse(-0.950);
-            ultimateGoalRobot.delivery2.reverse(0.950);
+        if (joy1.toggle.a) {
+            ultimateGoalRobot.delivery1.setVelocity(-2300);
+            ultimateGoalRobot.delivery2.setVelocity(2300);
+            shooterState = "Powershot power";
+        } else if (joy2.toggle.y) {
+            ultimateGoalRobot.delivery1.setVelocity(-2600);
+            ultimateGoalRobot.delivery2.setVelocity(2600);
             shooterState = "Maximum power";
         } else if (joy2.toggle.a) {
-            ultimateGoalRobot.delivery1.reverse(-0.900);
-            ultimateGoalRobot.delivery2.reverse(0.900);
+            ultimateGoalRobot.delivery1.setVelocity(-2550);
+            ultimateGoalRobot.delivery2.setVelocity(2550);
+            //ultimateGoalRobot.delivery1.reverse(-0.900);
+            //ultimateGoalRobot.delivery2.reverse(0.900);
             shooterState = "Reduced power";
-            // ultimateGoalRobot.ringServo.setPower(-0.99);
-        } else if (joy1.toggle.a) {
-                ultimateGoalRobot.delivery1.reverse(-0.85);
-                ultimateGoalRobot.delivery2.reverse(0.85);
-            shooterState = "Powershot power";
         } else {
                 ultimateGoalRobot.delivery1.stop();
                 ultimateGoalRobot.delivery2.stop();
             shooterState = "No power";
         }
-
-
 
         if (joy2.toggle.x) {
         ultimateGoalRobot.armAngleServo.open();

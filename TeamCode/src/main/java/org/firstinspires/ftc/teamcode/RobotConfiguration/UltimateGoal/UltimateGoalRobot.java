@@ -7,17 +7,20 @@ import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
+import org.firstinspires.ftc.teamcode.Subsystems.VelocityMotor;
 import org.firstinspires.ftc.teamcode.Subsystems.OpenCloseServo;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.ContinuousServo;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivetrain;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Initializable;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.MechanumDrivable;
 import org.firstinspires.ftc.teamcode.Subsystems.ReversableMotor;
+import org.firstinspires.ftc.teamcode.Subsystems.VelocityMotor;
 
 public class UltimateGoalRobot implements Drivable, Initializable {
     // Components
@@ -30,8 +33,8 @@ public class UltimateGoalRobot implements Drivable, Initializable {
 
     public ReversableMotor flapper;
     public ReversableMotor belt;
-    public ReversableMotor delivery1;
-    public ReversableMotor delivery2;
+    public VelocityMotor delivery1;
+    public VelocityMotor delivery2;
 
     public OpenCloseServo armAngleServo;
     public OpenCloseServo armGripServo;
@@ -60,10 +63,10 @@ public class UltimateGoalRobot implements Drivable, Initializable {
                 .addRightMotorWithEncoder(backLeft)
                 .setGearRatio(1.2)
                 .build();
-        final DcMotor delivery1 = hardwareMap.dcMotor.get("delivery1");
-        this.delivery1 = new ReversableMotor(delivery1, 1);
-        final DcMotor delivery2 = hardwareMap.dcMotor.get("delivery2");
-        this.delivery2 = new ReversableMotor(delivery2, 1);
+        final DcMotorEx delivery1 = (DcMotorEx) hardwareMap.dcMotor.get("delivery1");
+        this.delivery1 = new VelocityMotor(delivery1, 1);
+        final DcMotorEx delivery2 = (DcMotorEx) hardwareMap.dcMotor.get("delivery2");
+        this.delivery2 = new VelocityMotor(delivery2, 1);
 
         final Servo armAngleServo = hardwareMap.servo.get("armAngle");
         this.armAngleServo = new OpenCloseServo(armAngleServo, 0.7, 0.20, 0.70);
