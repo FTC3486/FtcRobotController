@@ -43,7 +43,7 @@ import org.openftc.revextensions2.RevBulkData;
  *     -Created by Saatvik on 12/27/20.
  *     -
  */
-@Autonomous(name = "Ultimate Goal Auto", group = "Blue")
+@Autonomous(name = "Ultimate Goal Auto", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
 public class UltimateGoalAuto extends LinearOpMode {
 
     OpenCvCamera webcam;
@@ -230,10 +230,10 @@ public class UltimateGoalAuto extends LinearOpMode {
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         }
-        sleep(500);
+
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
-        sleep(500);
+
         while ((getAngle() > -178 && getAngle() < 0) || (getAngle() > 182 && getAngle() > 0)) {
             ultimateGoalRobot.getDrivetrain().setPowers(.3, 0);
         }
@@ -269,9 +269,8 @@ public class UltimateGoalAuto extends LinearOpMode {
         encoderAutoDriver.driveToDistance(2, .5);
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
-        sleep(1000);
-        ultimateGoalRobot.delivery1.reverse(-.90);
-        ultimateGoalRobot.delivery2.run(0.90);
+        ultimateGoalRobot.delivery1.setVelocity(-2425);
+        ultimateGoalRobot.delivery2.setVelocity(2425);
         sleep(500);
         throwRings();
         encoderAutoDriver.driveToDistance(-6, 1);

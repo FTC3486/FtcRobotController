@@ -109,8 +109,8 @@ public class UltimateGoalTeleop extends OpMode {
             ultimateGoalRobot.delivery2.setVelocity(2600);
             shooterState = "Maximum power";
         } else if (joy2.toggle.a) {
-            ultimateGoalRobot.delivery1.setVelocity(-2550);
-            ultimateGoalRobot.delivery2.setVelocity(2550);
+            ultimateGoalRobot.delivery1.setVelocity(-2450);
+            ultimateGoalRobot.delivery2.setVelocity(2450);
             //ultimateGoalRobot.delivery1.reverse(-0.900);
             //ultimateGoalRobot.delivery2.reverse(0.900);
             shooterState = "Reduced power";

@@ -79,6 +79,30 @@ public class DriveStraight extends LinearOpMode {
         ultimateGoalRobot.armGripServo.close();
         waitForStart();
         encoderAutoDriver.setPower(1);
+
+        boolean leftActive = false;
+        boolean rightActive = false;
+        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
+        while (!leftActive ||
+                !rightActive) {
+            telemetry.addData("Left Color Sensor", ultimateGoalRobot.colorSensorLeft.green());
+            telemetry.addData("Right Color Sensor", ultimateGoalRobot.colorSensorRight.green());
+            telemetry.addData("Left Sensor", leftActive);
+            telemetry.addData("Right Sensor", rightActive);
+            updateTelemetry(telemetry);
+            if (ultimateGoalRobot.colorSensorLeft.green() > 500) {
+                leftActive = true;
+            } if (ultimateGoalRobot.colorSensorRight.green() > 500) {
+                rightActive = true;
+            }
+
+            if (leftActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(-.3, 0);
+            } else if(rightActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(0, -.3);
+            }
+        }
+        ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
        /*encoderAutoDriver.driveToDistance(100, 1);
         telemetry.addData("Left", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
         telemetry.addData("Right", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
@@ -91,6 +115,8 @@ public class DriveStraight extends LinearOpMode {
             telemetry.addData("Right", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             telemetry.update();
         }*/
+
+        /*
         while (opModeIsActive()) {
             ultimateGoalRobot.getDrivetrain().setPowers(1, 1);
             bulkData = expansionHub.getBulkInputData();
@@ -107,7 +133,7 @@ public class DriveStraight extends LinearOpMode {
             updateTelemetry(telemetry);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-
+        */
 
         //-----------
 
