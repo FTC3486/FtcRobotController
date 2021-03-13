@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @TeleOp(name = "Vuforia Testing", group = "Concept")
-@Disabled
+//@Disabled
 public class VuforiaTest extends LinearOpMode {
 
     VuforiaDriver vuforiaDriver;
@@ -32,7 +32,7 @@ public class VuforiaTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("Stone Position", vuforiaDriver.getTrackableLocation(VuforiaSkyStone.TRACKABLE_NAMES[0]));
+            //telemetry.addData("Stone Position", vuforiaDriver.getTrackableLocation(VuforiaSkyStone.TRACKABLE_NAMES[0]));
 
             try {
                 telemetry.addData("Robot Position", vuforiaDriver.getRobotLocation());

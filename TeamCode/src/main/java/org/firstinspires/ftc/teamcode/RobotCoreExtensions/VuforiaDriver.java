@@ -123,17 +123,22 @@ public class VuforiaDriver implements AutoCloseable {
         final VectorF positionVector = acc.scaled(geometricSumReciprocal).getTranslation();
         final Position position = new Position(DistanceUnit.MM, positionVector.get(0), positionVector.get(1), positionVector.get(2), 0);
         final Orientation orientation = Orientation.getOrientation(acc, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
         return new Location(position, orientation);
     }
 
-    public Location getTrackableLocation(String trackableName) {
-        final VuforiaBase.TrackingResults trackingResults = vuforia.trackPose(trackableName);
-        final VectorF positionVector = trackingResults.matrix.getTranslation();
-        final Position position = new Position(DistanceUnit.MM, positionVector.get(0), positionVector.get(1), positionVector.get(2), 0);
-        final Orientation orientation = Orientation.getOrientation(trackingResults.matrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+    public Location getTrackableLocation(String trackableName) throws PositionCalculationException {
 
-        return new Location(position, orientation);
+            final VuforiaBase.TrackingResults trackingResults = vuforia.trackPose(trackableName);
+            if (trackingResults != null) {
+                final VectorF positionVector = trackingResults.matrix.getTranslation();
+                final Position position = new Position(DistanceUnit.MM, positionVector.get(0), positionVector.get(1), positionVector.get(2), 0);
+                final Orientation orientation = Orientation.getOrientation(trackingResults.matrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                return new Location(position, orientation);
+            } else {
+            throw new PositionCalculationException("Could not detect item");
+        }
+
+
     }
 
     public boolean isVisible(String trackableName) {

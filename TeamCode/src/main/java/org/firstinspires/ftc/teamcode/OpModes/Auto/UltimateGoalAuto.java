@@ -153,9 +153,9 @@ public class UltimateGoalAuto extends LinearOpMode {
             //encoderAutoDriver.driveToDistance(100, .5);
             webcam.stopStreaming();
             // Originally at .93, I presume better in the 13.3-13.8 volt range.
-            encoderAutoDriver.coast(12, .5, .5);
-            //Originally 50
-            encoderAutoDriver.driveToDistance(40, 1);
+            //encoderAutoDriver.coast(12, .5, .5);
+            //Originally 50, 40 with coast
+            encoderAutoDriver.driveToDistance(50, 1);
             updateTelemetry(telemetry);
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -174,7 +174,7 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-25, 1);
+            encoderAutoDriver.driveToDistance(-22.5, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
             telemetry.addData("IMU", getAngle());
@@ -182,8 +182,9 @@ public class UltimateGoalAuto extends LinearOpMode {
             //comp.equals("ONE")
         } else if (comp.equals("ONE")) {
             webcam.stopStreaming();
-            encoderAutoDriver.coast(12, .5, .5);
-            encoderAutoDriver.driveToDistance(60, 1);
+            //encoderAutoDriver.coast(12, .5, .5);
+            // 60 with coast
+            encoderAutoDriver.driveToDistance(75, 1);
             telemetry.update();
             encoderAutoDriver.spinClockwise(6.5, .5);
             encoderAutoDriver.driveToDistance(8, 1);
@@ -202,14 +203,14 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-25, 1);
+            encoderAutoDriver.driveToDistance(-22.5, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         } else {
             webcam.stopStreaming();
-            encoderAutoDriver.coast(12, .5, .5);
+            //encoderAutoDriver.coast(12, .5, .5);
             // Originally 90
-            encoderAutoDriver.turnLeft(80, 1, 1);
+            encoderAutoDriver.turnLeft(100, 1, 1);
             telemetry.update();
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -226,7 +227,7 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-25, 1);
+            encoderAutoDriver.driveToDistance(-22.5, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         }
@@ -243,10 +244,11 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(0, .3);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
         boolean leftActive = false;
         boolean rightActive = false;
-        while (ultimateGoalRobot.colorSensorLeft.green() < 500 && ultimateGoalRobot.colorSensorRight.green() < 500) {
+        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
+        while (!leftActive ||
+                !rightActive) {
             telemetry.addData("Left Color Sensor", ultimateGoalRobot.colorSensorLeft.green());
             telemetry.addData("Right Color Sensor", ultimateGoalRobot.colorSensorRight.green());
             telemetry.addData("Left Sensor", leftActive);
@@ -263,15 +265,42 @@ public class UltimateGoalAuto extends LinearOpMode {
             } else if(rightActive) {
                 ultimateGoalRobot.getDrivetrain().setPowers(0, -.3);
             }
-
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
+        /*
+        encoderAutoDriver.driveToDistance(3, .3);
+        sleep(500);
+        leftActive = false;
+        rightActive = false;
+        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
+        while (!leftActive ||
+                !rightActive) {
+            telemetry.addData("Left Color Sensor", ultimateGoalRobot.colorSensorLeft.green());
+            telemetry.addData("Right Color Sensor", ultimateGoalRobot.colorSensorRight.green());
+            telemetry.addData("Left Sensor", leftActive);
+            telemetry.addData("Right Sensor", rightActive);
+            updateTelemetry(telemetry);
+            if (ultimateGoalRobot.colorSensorLeft.green() > 500) {
+                leftActive = true;
+            } if (ultimateGoalRobot.colorSensorRight.green() > 500) {
+                rightActive = true;
+            }
+
+            if (leftActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(-.3, 0);
+            } else if(rightActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(0, -.3);
+            }
+        }
+        ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
+
+         */
         encoderAutoDriver.driveToDistance(2, .5);
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
         ultimateGoalRobot.delivery1.setVelocity(-2425);
         ultimateGoalRobot.delivery2.setVelocity(2425);
-        sleep(500);
+        sleep(1000);
         throwRings();
         encoderAutoDriver.driveToDistance(-6, 1);
     }
