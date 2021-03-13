@@ -103,6 +103,31 @@ public class DriveStraight extends LinearOpMode {
             }
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
+        encoderAutoDriver.driveToDistance(3, .3);
+        sleep(500);
+        leftActive = false;
+        rightActive = false;
+        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
+        while (!leftActive ||
+                !rightActive) {
+            telemetry.addData("Left Color Sensor", ultimateGoalRobot.colorSensorLeft.green());
+            telemetry.addData("Right Color Sensor", ultimateGoalRobot.colorSensorRight.green());
+            telemetry.addData("Left Sensor", leftActive);
+            telemetry.addData("Right Sensor", rightActive);
+            updateTelemetry(telemetry);
+            if (ultimateGoalRobot.colorSensorLeft.green() > 500) {
+                leftActive = true;
+            } if (ultimateGoalRobot.colorSensorRight.green() > 500) {
+                rightActive = true;
+            }
+
+            if (leftActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(-.3, 0);
+            } else if(rightActive) {
+                ultimateGoalRobot.getDrivetrain().setPowers(0, -.3);
+            }
+        }
+        ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
        /*encoderAutoDriver.driveToDistance(100, 1);
         telemetry.addData("Left", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
         telemetry.addData("Right", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
