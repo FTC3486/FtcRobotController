@@ -43,7 +43,7 @@ import org.openftc.revextensions2.RevBulkData;
  *     -Created by Saatvik on 12/27/20.
  *     -
  */
-@Autonomous(name = "Ultimate Goal Auto", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
+@Autonomous(name = "Ultimate Goal Auto Blue", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
 public class UltimateGoalAuto extends LinearOpMode {
 
     OpenCvCamera webcam;
@@ -74,7 +74,7 @@ public class UltimateGoalAuto extends LinearOpMode {
         ultimateGoalRobot.initialize();
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         bulkData = expansionHub.getBulkInputData();
-        //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
+        leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
         leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
         parameters.mode                = BNO055IMU.SensorMode.IMU;
@@ -156,6 +156,8 @@ public class UltimateGoalAuto extends LinearOpMode {
             //encoderAutoDriver.coast(12, .5, .5);
             //Originally 50, 40 with coast
             encoderAutoDriver.driveToDistance(50, 1);
+            telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
+            telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             updateTelemetry(telemetry);
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -174,7 +176,8 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-22.5, 1);
+            //22.5 for all paths
+            encoderAutoDriver.driveToDistance(-20, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
             telemetry.addData("IMU", getAngle());
@@ -185,6 +188,8 @@ public class UltimateGoalAuto extends LinearOpMode {
             //encoderAutoDriver.coast(12, .5, .5);
             // 60 with coast
             encoderAutoDriver.driveToDistance(75, 1);
+            telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
+            telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             telemetry.update();
             encoderAutoDriver.spinClockwise(6.5, .5);
             encoderAutoDriver.driveToDistance(8, 1);
@@ -203,7 +208,7 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-22.5, 1);
+            encoderAutoDriver.driveToDistance(-20, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         } else {
@@ -211,6 +216,8 @@ public class UltimateGoalAuto extends LinearOpMode {
             //encoderAutoDriver.coast(12, .5, .5);
             // Originally 90
             encoderAutoDriver.turnLeft(100, 1, 1);
+            telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
+            telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             telemetry.update();
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -221,13 +228,13 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.armGripServo.close();
             sleep(500);
             encoderAutoDriver.coast(-12, -.5, -.5);
-            encoderAutoDriver.driveToDistance(-30, 1);
+            encoderAutoDriver.driveToDistance(-36, 1);
             telemetry.update();
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-22.5, 1);
+            encoderAutoDriver.driveToDistance(-20, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         }
@@ -254,9 +261,9 @@ public class UltimateGoalAuto extends LinearOpMode {
             telemetry.addData("Left Sensor", leftActive);
             telemetry.addData("Right Sensor", rightActive);
             updateTelemetry(telemetry);
-            if (ultimateGoalRobot.colorSensorLeft.green() > 500) {
+            if (ultimateGoalRobot.colorSensorLeft.green() > 300) {
                 leftActive = true;
-            } if (ultimateGoalRobot.colorSensorRight.green() > 500) {
+            } if (ultimateGoalRobot.colorSensorRight.green() > 300) {
                 rightActive = true;
             }
 
@@ -298,8 +305,8 @@ public class UltimateGoalAuto extends LinearOpMode {
         encoderAutoDriver.driveToDistance(2, .5);
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
-        ultimateGoalRobot.delivery1.setVelocity(-2425);
-        ultimateGoalRobot.delivery2.setVelocity(2425);
+        ultimateGoalRobot.delivery1.setVelocity(-2300);
+        ultimateGoalRobot.delivery2.setVelocity(2300);
         sleep(1000);
         throwRings();
         encoderAutoDriver.driveToDistance(-6, 1);
@@ -372,8 +379,8 @@ public class UltimateGoalAuto extends LinearOpMode {
         static final int REGION_WIDTH = 45;
         static final int REGION_HEIGHT = 40;
 
-        final int FOUR_RING_THRESHOLD = 140;
-        final int ONE_RING_THRESHOLD = 130;
+        final int FOUR_RING_THRESHOLD = 150;
+        final int ONE_RING_THRESHOLD = 137;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

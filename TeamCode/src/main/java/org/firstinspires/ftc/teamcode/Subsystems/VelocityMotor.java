@@ -20,6 +20,7 @@ public class VelocityMotor implements Initializable {
     public VelocityMotor(DcMotorEx motor, double defaultPower) {
         this.motor = motor;
         this.defaultPower = defaultPower;
+        this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -58,7 +59,9 @@ public class VelocityMotor implements Initializable {
         velocityMotorState = VelocityMotorState.REVERSING;
     }
 
-
+    public void setPIDF(double p, double i, double d, double f) {
+        motor.setVelocityPIDFCoefficients(p, i, d, f);
+    }
 
     @Override
     public String toString() {

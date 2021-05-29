@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @TeleOp(name = "Vuforia Testing", group = "Concept")
-//@Disabled
+@Disabled
 public class VuforiaTest extends LinearOpMode {
 
     VuforiaDriver vuforiaDriver;

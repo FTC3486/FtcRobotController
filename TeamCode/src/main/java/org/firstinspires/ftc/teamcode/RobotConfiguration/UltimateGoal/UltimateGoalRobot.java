@@ -69,7 +69,7 @@ public class UltimateGoalRobot implements Drivable, Initializable {
         this.delivery2 = new VelocityMotor(delivery2, 1);
 
         final Servo armAngleServo = hardwareMap.servo.get("armAngle");
-        this.armAngleServo = new OpenCloseServo(armAngleServo, 0.7, 0.20, 0.70);
+        this.armAngleServo = new OpenCloseServo(armAngleServo, 0.75, 0.25, 0.703);
         //Capstone Servo
         final Servo armGripServo = hardwareMap.servo.get("armGrip");
         this.armGripServo = new OpenCloseServo(armGripServo, .01, 0.65, 0.25);

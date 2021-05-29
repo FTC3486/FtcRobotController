@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.ReversableMotor;
  */
 
 @TeleOp(name = "Ultimate Goal Mechanum Teleop", group = "Teleop2020")
-@Disabled
+//@Disabled
 public class UltimateGoalMechanumTeleop extends OpMode {
     //Declare parts of the robot that will be used by this Teleop
     // private UltimateGoalRobot ultimateGoalRobot = new UltimateGoalRobot(this.hardwareMap);

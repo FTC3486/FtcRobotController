@@ -155,6 +155,7 @@ public class EncoderAutoDriver extends AutoDriver {
     public void spinCounterclockwise(double distance, double rightPower) {
         turnLeft(distance, -rightPower, rightPower);
     }
+
     public void coast(double distance, double leftPower, double rightPower) {
         setupMotion("Turning left");
 
