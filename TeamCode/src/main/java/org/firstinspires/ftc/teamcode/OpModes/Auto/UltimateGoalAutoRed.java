@@ -43,8 +43,8 @@ import org.openftc.revextensions2.RevBulkData;
  *     -Created by Saatvik on 12/27/20.
  *     -
  */
-@Autonomous(name = "Ultimate Goal Auto Blue", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
-public class UltimateGoalAuto extends LinearOpMode {
+@Autonomous(name = "Ultimate Goal Auto Red", group = "Red", preselectTeleOp = "UltimateGoalTeleop")
+public class UltimateGoalAutoRed extends LinearOpMode {
 
     OpenCvCamera webcam;
     SkystoneDeterminationPipeline pipeline;
@@ -173,13 +173,13 @@ public class UltimateGoalAuto extends LinearOpMode {
             telemetry.addData("IMU", getAngle());
             updateTelemetry(telemetry);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
+            ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
             //22.5 for all paths
-            encoderAutoDriver.driveToDistance(-20, 1);
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            encoderAutoDriver.driveToDistance(-6, 1);
+            encoderAutoDriver.driveToDistance(20, 1);
+            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.driveToDistance(6, 1);
             telemetry.addData("IMU", getAngle());
             updateTelemetry(telemetry);
             //comp.equals("ONE")
@@ -191,7 +191,7 @@ public class UltimateGoalAuto extends LinearOpMode {
             telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
             telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             telemetry.update();
-            encoderAutoDriver.spinClockwise(6.5, .5);
+            encoderAutoDriver.spinCounterclockwise(6.5, .5);
             encoderAutoDriver.driveToDistance(8, 1);
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -201,16 +201,16 @@ public class UltimateGoalAuto extends LinearOpMode {
             ultimateGoalRobot.armAngleServo.close();
             ultimateGoalRobot.armGripServo.close();
             sleep(500);
-            encoderAutoDriver.spinCounterclockwise(6.5, .5);
+            encoderAutoDriver.spinClockwise(6.5, .5);
             encoderAutoDriver.driveToDistance(-35, 1);
             telemetry.update();
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
+            ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-20, 1);
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            encoderAutoDriver.driveToDistance(-6, 1);
+            encoderAutoDriver.driveToDistance(20, 1);
+            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.driveToDistance(6, 1);
         } else {
             webcam.stopStreaming();
             //encoderAutoDriver.coast(12, .5, .5);
@@ -231,22 +231,22 @@ public class UltimateGoalAuto extends LinearOpMode {
             encoderAutoDriver.driveToDistance(-36, 1);
             telemetry.update();
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            ultimateGoalRobot.getDrivetrain().setPowers(.5, .5);
+            ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(-20, 1);
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
-            encoderAutoDriver.driveToDistance(-6, 1);
+            encoderAutoDriver.driveToDistance(20, 1);
+            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.driveToDistance(6, 1);
         }
 
         telemetry.addData("IMU", getAngle());
-        updateTelemetry(telemetry);
 
         while ((getAngle() > -178 && getAngle() < 0) || (getAngle() > 182 && getAngle() > 0)) {
             ultimateGoalRobot.getDrivetrain().setPowers(.3, 0);
+        updateTelemetry(telemetry);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-        
+
         while ((getAngle() < 178 && getAngle() > 0) || (getAngle() < -182 && getAngle() < 0) ) {
             ultimateGoalRobot.getDrivetrain().setPowers(0, .3);
         }
