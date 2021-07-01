@@ -172,13 +172,13 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             sleep(500);
             telemetry.addData("IMU", getAngle());
             updateTelemetry(telemetry);
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
             //22.5 for all paths
             encoderAutoDriver.driveToDistance(20, 1);
-            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(6, 1);
             telemetry.addData("IMU", getAngle());
             updateTelemetry(telemetry);
@@ -204,12 +204,12 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             encoderAutoDriver.spinClockwise(6.5, .5);
             encoderAutoDriver.driveToDistance(-35, 1);
             telemetry.update();
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
             encoderAutoDriver.driveToDistance(20, 1);
-            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(6, 1);
         } else {
             webcam.stopStreaming();
@@ -230,12 +230,12 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             encoderAutoDriver.coast(-12, -.5, -.5);
             encoderAutoDriver.driveToDistance(-36, 1);
             telemetry.update();
-            encoderAutoDriver.spinCounterclockwise(7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
             encoderAutoDriver.driveToDistance(20, 1);
-            encoderAutoDriver.spinClockwise(-7.5, .5);
+            encoderAutoDriver.spinClockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(6, 1);
         }
 

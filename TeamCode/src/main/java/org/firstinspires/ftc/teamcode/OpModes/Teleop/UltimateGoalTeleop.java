@@ -45,10 +45,10 @@ public class UltimateGoalTeleop extends OpMode {
     //Creates string for telemetry about shooter state
     String shooterState = "";
     //Variables to adjust motor velocities for deliveries
-    final int powershotPower = 2150;
+    final int powershotPower = 2225;
     //final int powershotPower = 2125;
     //final int powershotPower = 2400;
-    final int towerPower = 2300;
+    final int towerPower = 2375;
     //final int towerPower = 2550;
     //final int towerPower = 2450;, powershotPower = 2300;
 

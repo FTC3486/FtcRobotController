@@ -305,8 +305,8 @@ public class UltimateGoalAutoBlue extends LinearOpMode {
         encoderAutoDriver.driveToDistance(2, .5);
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
-        ultimateGoalRobot.delivery1.setVelocity(-2300);
-        ultimateGoalRobot.delivery2.setVelocity(2300);
+        ultimateGoalRobot.delivery1.setVelocity(-2375);
+        ultimateGoalRobot.delivery2.setVelocity(2375);
         sleep(1000);
         throwRings();
         encoderAutoDriver.driveToDistance(-6, 1);
@@ -379,8 +379,8 @@ public class UltimateGoalAutoBlue extends LinearOpMode {
         static final int REGION_WIDTH = 45;
         static final int REGION_HEIGHT = 40;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 137;
+        final int FOUR_RING_THRESHOLD = 140;
+        final int ONE_RING_THRESHOLD = 130;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
