@@ -242,20 +242,20 @@ public class UltimateGoalAutoBlue extends LinearOpMode {
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
 
-        while ((getAngle() > -178 && getAngle() < 0) || (getAngle() > 182 && getAngle() > 0)) {
+        while (((getAngle() > -178 && getAngle() < 0) || (getAngle() > 182 && getAngle() > 0)) && opModeIsActive()) {
             ultimateGoalRobot.getDrivetrain().setPowers(.3, 0);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-        
-        while ((getAngle() < 178 && getAngle() > 0) || (getAngle() < -182 && getAngle() < 0) ) {
+
+        while (((getAngle() < 178 && getAngle() > 0) || (getAngle() < -182 && getAngle() < 0)) && opModeIsActive() ) {
             ultimateGoalRobot.getDrivetrain().setPowers(0, .3);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
         boolean leftActive = false;
         boolean rightActive = false;
         ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
-        while (!leftActive ||
-                !rightActive) {
+        while ((!leftActive ||
+                !rightActive) && opModeIsActive()) {
             telemetry.addData("Left Color Sensor", ultimateGoalRobot.colorSensorLeft.green());
             telemetry.addData("Right Color Sensor", ultimateGoalRobot.colorSensorRight.green());
             telemetry.addData("Left Sensor", leftActive);

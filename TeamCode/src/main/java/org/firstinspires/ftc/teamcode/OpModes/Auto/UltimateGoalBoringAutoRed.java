@@ -46,7 +46,7 @@ import org.openftc.revextensions2.RevBulkData;
        -Edited by Mary on 6/24/21
  */
 
-@Autonomous(name = "Ultimate Goal Boring Auto Red", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
+@Autonomous(name = "Ultimate Goal Boring Auto Red", group = "Red", preselectTeleOp = "UltimateGoalTeleop")
 public class UltimateGoalBoringAutoRed extends LinearOpMode {
 
     private UltimateGoalRobot ultimateGoalRobot;
