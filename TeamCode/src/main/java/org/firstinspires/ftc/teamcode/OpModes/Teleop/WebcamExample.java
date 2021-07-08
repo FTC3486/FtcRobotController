@@ -105,7 +105,7 @@
          // Original: 181, 98
          // Increasing x moves point right
          // Increasing y moves point down
-         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270, 110);
+         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(135, 110);
 
          static final int REGION_WIDTH = 45;
          static final int REGION_HEIGHT = 40;

@@ -141,25 +141,16 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
         }
-        telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
-        telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
-        telemetry.addData("IMU", getAngle());
-        updateTelemetry(telemetry);
         encoderAutoDriver.setPower(1);
         String comp = pipeline.state();
         resetAngle();
-        // comp.equals("NONE")
-        //if (comp.equals("NONE")) {
-         if (1 == 2) {
+         if (comp.equals("NONE")) {
             //encoderAutoDriver.driveToDistance(100, .5);
             webcam.stopStreaming();
             // Originally at .93, I presume better in the 13.3-13.8 volt range.
             //encoderAutoDriver.coast(12, .5, .5);
             //Originally 50, 40 with coast
             encoderAutoDriver.driveToDistance(50, 1);
-            telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
-            telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
-            updateTelemetry(telemetry);
             encoderAutoDriver.spinClockwise(3,.5);
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
@@ -176,11 +167,11 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             sleep(1500);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
             //22.5 for all paths
-            encoderAutoDriver.driveToDistance(20, 1);
+            encoderAutoDriver.driveToDistance(24, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
-        }  //else if (comp.equals("ONE")) {
-        else if (2 == 2) {
+        }
+        else if (comp.equals("ONE")) {
             webcam.stopStreaming();
             //encoderAutoDriver.coast(12, .5, .5);
             // 60 with coast
@@ -200,49 +191,49 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             sleep(500);
             encoderAutoDriver.spinClockwise(2.5, .5);
             encoderAutoDriver.driveToDistance(-35, 1);
-            telemetry.update();
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(20, 1);
+            encoderAutoDriver.driveToDistance(24, 1);
             encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         } else {
             webcam.stopStreaming();
             //encoderAutoDriver.coast(12, .5, .5);
             // Originally 90
-            encoderAutoDriver.turnLeft(100, 1, 1);
+            encoderAutoDriver.turnLeft(90, 1, 1);
             telemetry.addData("Left Encoder", ultimateGoalRobot.getDrivetrain().getLeftEncoderCount());
             telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
             telemetry.update();
+            encoderAutoDriver.spinClockwise(3,.5);
+            encoderAutoDriver.driveToDistance(5, 1);
             ultimateGoalRobot.armAngleServo.open();
             sleep(500);
             ultimateGoalRobot.armGripServo.open();
             sleep(500);
+            encoderAutoDriver.driveToDistance(-5, 1);
+            encoderAutoDriver.spinCounterclockwise(2.5,.5);
             encoderAutoDriver.driveToDistance(-6, 1);
             ultimateGoalRobot.armAngleServo.close();
             ultimateGoalRobot.armGripServo.close();
             sleep(500);
             encoderAutoDriver.coast(-12, -.5, -.5);
             encoderAutoDriver.driveToDistance(-36, 1);
-            telemetry.update();
-            encoderAutoDriver.spinClockwise(7.5, .5);
+            encoderAutoDriver.spinCounterclockwise(7.5, .5);
             ultimateGoalRobot.getDrivetrain().setPowers(-.5, -.5);
             sleep(1000);
             ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
-            encoderAutoDriver.driveToDistance(20, 1);
-            encoderAutoDriver.spinClockwise(7.5, .5);
+            encoderAutoDriver.driveToDistance(24, 1);
+            encoderAutoDriver.spinCounterclockwise(7.5, .5);
             encoderAutoDriver.driveToDistance(-6, 1);
         }
 
-        telemetry.addData("IMU", getAngle());
-
         while (((getAngle() > -178 && getAngle() < 0) || (getAngle() > 182 && getAngle() > 0)) && (opModeIsActive())) {
             ultimateGoalRobot.getDrivetrain().setPowers(.3, 0);
-        updateTelemetry(telemetry);
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
+
 
         while (((getAngle() < 178 && getAngle() > 0) || (getAngle() < -182 && getAngle() < 0)) && opModeIsActive()) {
             ultimateGoalRobot.getDrivetrain().setPowers(0, .3);
@@ -250,6 +241,7 @@ public class UltimateGoalAutoRed extends LinearOpMode {
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
         boolean leftActive = false;
         boolean rightActive = false;
+
         ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
         while ((!leftActive ||
                 !rightActive) && opModeIsActive()) {
@@ -265,15 +257,14 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             }
 
             if (leftActive) {
-                ultimateGoalRobot.getDrivetrain().setPowers(-.3, 0);
+                ultimateGoalRobot.getDrivetrain().setPowers(-.2, 0);
             } else if(rightActive) {
-                ultimateGoalRobot.getDrivetrain().setPowers(0, -.3);
+                ultimateGoalRobot.getDrivetrain().setPowers(0, -.2);
             }
         }
         ultimateGoalRobot.getDrivetrain().setPowers(0, 0);
         encoderAutoDriver.driveToDistance(2, .5);
-        telemetry.addData("IMU", getAngle());
-        updateTelemetry(telemetry);
+
         ultimateGoalRobot.delivery1.setVelocity(-2300);
         ultimateGoalRobot.delivery2.setVelocity(2300);
         sleep(1000);
@@ -343,13 +334,13 @@ public class UltimateGoalAutoRed extends LinearOpMode {
         // Original: 181, 98
         // Increasing x moves point right
         // Increasing y moves point down
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270, 110);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(135, 110);
 
         static final int REGION_WIDTH = 45;
         static final int REGION_HEIGHT = 40;
 
-        final int FOUR_RING_THRESHOLD = 150;
-        final int ONE_RING_THRESHOLD = 137;
+        final int FOUR_RING_THRESHOLD = 136;
+        final int ONE_RING_THRESHOLD = 130;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

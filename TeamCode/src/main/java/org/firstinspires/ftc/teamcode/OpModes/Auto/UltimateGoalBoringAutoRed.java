@@ -132,6 +132,7 @@ public class UltimateGoalBoringAutoRed extends LinearOpMode {
         ultimateGoalRobot.armAngleServo.open();
         ultimateGoalRobot.armGripServo.open();
 
+        encoderAutoDriver.spinClockwise(.75, 1);
         ultimateGoalRobot.delivery1.setVelocity(-2375);
         ultimateGoalRobot.delivery2.setVelocity(2375);
         sleep(1000);
