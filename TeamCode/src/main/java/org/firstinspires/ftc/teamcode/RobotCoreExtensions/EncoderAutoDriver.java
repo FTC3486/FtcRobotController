@@ -1,6 +1,15 @@
 package org.firstinspires.ftc.teamcode.RobotCoreExtensions;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Filename: EncoderAutoDriver.java
@@ -35,6 +44,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class EncoderAutoDriver extends AutoDriver {
     private final Drivetrain drivetrain;
+    BNO055IMU imu;
 
     public EncoderAutoDriver(Drivable hw, LinearOpMode opMode) {
         super(hw, opMode);
@@ -102,6 +112,311 @@ public class EncoderAutoDriver extends AutoDriver {
                     && opMode.opModeIsActive()) {}
         }
         endMotion();
+    }
+
+    public void setImu(BNO055IMU imu){
+        this.imu = imu;
+    }
+
+    private Orientation getOrientation()
+    {
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    }
+
+    //rotates vehicle to a specified global angle using PID controller and IMU
+    private boolean rotatePID(float desiredAngle, HardwareMap hm){
+
+        float starting_angle = getOrientation().firstAngle;
+        float previous_angle = 0;
+        float current_angle = 0;
+        double target = desiredAngle;
+
+        DcMotor frontLeft = hm.dcMotor.get("leftf");
+        DcMotor frontRight = hm.dcMotor.get("rightf");
+        DcMotor backLeft = hm.dcMotor.get("leftr");
+        DcMotor backRight = hm.dcMotor.get("rightr");
+
+        int totalTime = 0;
+
+        double start_time = System.currentTimeMillis();
+        double stop_counter = System.currentTimeMillis();
+
+        double error = 90, P, I, D, kp = 0.01, ki = 0.00005, kd = 450, integral = 0, derivative, correction, t, lastTime = 0, dt = 0.1, lastError = 90;
+
+        while(Math.abs(error) > 0.5 && opMode.opModeIsActive() && stop_counter < start_time + 5000 ){
+
+            current_angle = getOrientation().firstAngle - starting_angle;
+
+            //attempts to catch if we switch from 180 -> -180 or vice versa
+            if(current_angle - previous_angle > 180)
+                current_angle = current_angle - 360;
+            if(current_angle - previous_angle < -180)
+                current_angle = current_angle + 360;
+
+            previous_angle = current_angle;
+
+            t = (double)System.nanoTime()/10;
+            if (lastTime != 0){
+                dt = t - lastTime;
+            }
+
+            error = target - current_angle;
+
+            integral = ki * ((error - lastError) * dt);
+            derivative = kd * ((error - lastError) / dt);
+
+            P = kp * error;
+            I = ki * integral;
+            D = kd * derivative;
+
+            correction = P + I + D;
+
+            if(correction > 0.5){
+                correction = 0.5;
+            } else if (correction < -0.5){
+                correction = -0.5;
+            }
+
+            frontLeft.setPower(correction);
+            frontRight.setPower(-correction);
+            backLeft.setPower(correction);
+            backRight.setPower(-correction);
+
+            lastError = error;
+            lastTime = t;
+            totalTime += t;
+
+            opMode.telemetry.addData("orientation: ", current_angle);
+            opMode.telemetry.addData("totalTime: ", totalTime * 10E-9);
+            opMode.telemetry.update();
+
+            stop_counter = System.currentTimeMillis();
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        if(stop_counter > stop_counter + 5000){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean rotateGlobal(float desiredAngle, HardwareMap hm){
+
+        float starting_angle = getOrientation().firstAngle;
+        float current_angle;
+
+        while ((desiredAngle > 180 || desiredAngle < -180) && opMode.opModeIsActive()){
+            if(desiredAngle > 180)
+                desiredAngle -= 360;
+
+            if(desiredAngle < -180)
+                desiredAngle += 360;
+        }
+
+        double target = desiredAngle;
+
+        DcMotor frontLeft = hm.dcMotor.get("leftf");
+        DcMotor frontRight = hm.dcMotor.get("rightf");
+        DcMotor backLeft = hm.dcMotor.get("leftr");
+        DcMotor backRight = hm.dcMotor.get("rightr");
+
+        int totalTime = 0;
+
+        double start_time = System.currentTimeMillis();
+        double stop_counter = System.currentTimeMillis();
+
+        double error = 90, P, I, D, kp = 0.01, ki = 0.00005, kd = 450, integral = 0, derivative, correction, t, lastTime = 0, dt = 0.1, lastError = 90;
+
+        while(Math.abs(error) > 0.5 && opMode.opModeIsActive() && stop_counter < start_time + 5000 ){
+
+            current_angle = getOrientation().firstAngle;
+
+
+            t = (double)System.nanoTime()/10;
+            if (lastTime != 0){
+                dt = t - lastTime;
+            }
+
+            error = target - current_angle;
+
+            integral = ki * ((error - lastError) * dt);
+            derivative = kd * ((error - lastError) / dt);
+
+            P = kp * error;
+            I = ki * integral;
+            D = kd * derivative;
+
+            correction = P + I + D;
+
+            if(correction > 0.5){
+                correction = 0.5;
+            } else if (correction < -0.5){
+                correction = -0.5;
+            }
+
+            //ffRobot.getDrivetrain().setPowers(correction,-correction);
+            frontLeft.setPower(correction);
+            frontRight.setPower(-correction);
+            backLeft.setPower(correction);
+            backRight.setPower(-correction);
+
+            lastError = error;
+            lastTime = t;
+            totalTime += t;
+
+            opMode.telemetry.addData("orientation: ", current_angle);
+            opMode.telemetry.addData("totalTime: ", totalTime * 10E-9);
+            opMode.telemetry.update();
+
+            stop_counter = System.currentTimeMillis();
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        if(stop_counter > stop_counter + 5000){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    //uses PID controller to rotate to a certain number of angles counterclockwise
+    //note if angle is greater than 180, vehicle will take shortest route
+    public boolean rotateCounterClockwise(float angle, HardwareMap hm){
+        while ((angle > 180 || angle < -180) && opMode.opModeIsActive()){
+            if(angle > 180)
+                angle -= 360;
+
+            if(angle < -180)
+                angle += 360;
+        }
+
+        return rotatePID(angle, hm);
+    }
+
+    //uses PID controller to rotate to a certain number of angles clockwise
+    //note if angle is greater than 180, vehicle will take shortest route
+    public boolean rotateClockwise(float angle, HardwareMap hm){
+
+        while ((angle > 180 || angle < -180) && opMode.opModeIsActive()){
+            if(angle > 180)
+                angle -= 360;
+
+            if(angle < -180)
+                angle += 360;
+        }
+
+        return rotatePID(-angle, hm);
+    }
+
+    //uses PID controller to drive straight
+    //it accepts positive inches, positive or negative power (forward/backward) and a hardwaremap
+    public boolean driveStraight(float inches, double power, HardwareMap hm){
+
+        //we might have to pass in DriveTrain object instead of using hw, test if it works
+        hw.getDrivetrain().resetMotorEncoders();
+        float starting_angle = getOrientation().firstAngle;
+        Drivetrain DT= hw.getDrivetrain();
+
+        float current_angle;
+        double target = starting_angle;
+
+        double start_time = System.currentTimeMillis();
+        double stop_counter = System.currentTimeMillis();
+
+        //hack to allow traveling the -180/180 line
+        boolean add_360 = false;
+        boolean sub_360 = false;
+        if (target > 170){
+            add_360 = true;
+        }
+        if(target < -170){
+            sub_360 = true;
+        }
+        //
+
+        DcMotor frontLeft = hm.dcMotor.get("leftf");
+        DcMotor frontRight = hm.dcMotor.get("rightf");
+        DcMotor backLeft = hm.dcMotor.get("leftr");
+        DcMotor backRight = hm.dcMotor.get("rightr");
+
+        int totalTime = 0;
+
+        double error = 90, P, I, D, kp = 0.01, ki = 0.00005, kd = 450, integral = 0, derivative, correction, t, lastTime = 0, dt = 0.1, lastError = 90;
+
+        while(opMode.opModeIsActive() && stop_counter < start_time + 5000){
+
+            //we are going forward
+            if(DT.getLeftEncoderCount() > DT.convertInchesToEncoderCounts(inches) && power > 0)
+                break;
+            //we are going backward
+            if(DT.getLeftEncoderCount() < -1*DT.convertInchesToEncoderCounts(inches) && power < 0)
+                break;
+
+            //hack to handle -180/180 line
+            current_angle = getOrientation().firstAngle;
+            if(add_360 && current_angle < 0)
+                current_angle+=360;
+            if(sub_360 && current_angle > 0)
+                current_angle-=360;
+            //
+
+            t = (double)System.nanoTime()/10;
+            if (lastTime != 0){
+                dt = t - lastTime;
+            }
+
+            error = target - current_angle;
+
+            integral = ki * ((error - lastError) * dt);
+            derivative = kd * ((error - lastError) / dt);
+
+            P = kp * error;
+            I = ki * integral;
+            D = kd * derivative;
+
+            correction = P + I + D;
+
+            if(correction > 0.5){
+                correction = 0.5;
+            } else if (correction < -0.5){
+                correction = -0.5;
+            }
+
+            //corrections should be very small
+            frontLeft.setPower(power + correction);
+            frontRight.setPower(power - correction);
+            backLeft.setPower(power + correction);
+            backRight.setPower(power - correction);
+
+            lastError = error;
+            lastTime = t;
+            totalTime += t;
+
+            opMode.telemetry.addData("orientation: ", current_angle);
+            opMode.telemetry.addData("totalTime: ", totalTime * 10E-9);
+            opMode.telemetry.update();
+
+            stop_counter = System.currentTimeMillis();
+        }
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        if(stop_counter > stop_counter + 5000){
+            return false;
+        } else {
+            rotateGlobal(starting_angle, hm);
+            return true;
+        }
     }
 
     // Function - driveToDistance
