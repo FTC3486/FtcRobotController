@@ -172,9 +172,10 @@ public class Drivetrain {
         }
     }
 
-    protected long convertInchesToEncoderCounts(double distance) {
-        return Math.round(((distance / (Math.PI * wheelDiameter)) / gearRatio) *
-                encoderCountsPerDriverGearRotation);
+    public long convertInchesToEncoderCounts(double distance) {
+        float fudge_factor = 1;
+        return (long) (Math.round(((distance / (Math.PI * wheelDiameter)) / gearRatio) *
+                encoderCountsPerDriverGearRotation) / fudge_factor);
     }
 
     public double getLeftEncoderCount() {
