@@ -29,12 +29,12 @@ public class FFImuTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        ffRobot = new FreightFrenzyRobot(this.hardwareMap);
+        ffRobot = new FreightFrenzyRobot(this.hardwareMap, this);
         encoderAutoDriver = new EncoderAutoDriver(ffRobot, this);
         telemetry.addData("Test", ffRobot.getDrivetrain().getLeftEncoderCount());
         ffRobot.getDrivetrain().resetMotorEncoders();
         ffRobot.initialize();
-        ffRobot.armGripServo.close();
+        ffRobot.bucketboi.close();
 
         //ExpansionHubEx expansionHub;
         //RevBulkData bulkData;
@@ -63,11 +63,12 @@ public class FFImuTest extends LinearOpMode {
         telemetry.addData("imu calib status", ffRobot.imu.getCalibrationStatus().toString());
         telemetry.update();
         waitForStart();
-        ffRobot.armGripServo.close();
+        ffRobot.bucketboi.close();
         sleep(1000);
 
+        //ffRobot.
 
-        encoderAutoDriver.rotateClockwise(45, hardwareMap);
+        /*encoderAutoDriver.rotateClockwise(45, hardwareMap);
         sleep(500);
         encoderAutoDriver.driveStraight(20, 0.5, hardwareMap);
         sleep(500);
@@ -80,7 +81,7 @@ public class FFImuTest extends LinearOpMode {
         encoderAutoDriver.driveStraight(20, 0.5, hardwareMap);
         sleep(500);
         encoderAutoDriver.rotateCounterClockwise(135, hardwareMap);
-        sleep(500);
+        sleep(500);*/
 
         //drives to duck spinner
         /*encoderAutoDriver.driveStraight(5, 0.5, hardwareMap);

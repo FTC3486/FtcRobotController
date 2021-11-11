@@ -11,28 +11,47 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivetrain;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Initializable;
 import org.firstinspires.ftc.teamcode.Subsystems.Latch;
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.ExpansionHubMotor;
 
 @TeleOp(name = "Test Motor", group = "Teleop2021")
 public class TestMotor extends OpMode {
     //Declare parts of the robot that will be used by this Teleop
-
-    DcMotor left1;
-    //final DcMotor left2 = hardwareMap.dcMotor.get("right2");
-    //final DcMotor right1 = hardwareMap.dcMotor.get("left1");
-    //final DcMotor right2 = hardwareMap.dcMotor.get("left2");
+    ExpansionHubMotor leftf, rightf, rightr,leftr;
 
     @Override
     public void init() {
-        left1 = hardwareMap.dcMotor.get("right1");
-        left1.setDirection(DcMotor.Direction.REVERSE);
-        //left2.setDirection(DcMotor.Direction.REVERSE);
-        //right1.setDirection(DcMotor.Direction.FORWARD);
-        //right2.setDirection(DcMotor.Direction.FORWARD);
-        left1.setPower(1.0f);
+        DcMotor leftf_, leftr_, rightf_, rightr_;
+
+        leftf_ = hardwareMap.dcMotor.get("leftf");
+        rightf_ = hardwareMap.dcMotor.get("rightf");
+        leftr_ = hardwareMap.dcMotor.get("leftr");
+        rightr_ = hardwareMap.dcMotor.get("rightr");
+
+        leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
+        rightf = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightf");
+        leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
+        rightr = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightr");
+
+        leftf_.setDirection(DcMotor.Direction.REVERSE);
+        rightf_.setDirection(DcMotor.Direction.REVERSE);
+        leftr_.setDirection(DcMotor.Direction.REVERSE);
+        rightr_.setDirection(DcMotor.Direction.REVERSE);
+
+        //waitForStart();
+
+        leftf_.setPower(0.5f);
+        rightf_.setPower(0.5f);
+        leftr_.setPower(0.5f);
+        rightr_.setPower(0.5f);
     }
 
     @Override
     public void loop() {
-        //left1.setPower(0.5f);
+        telemetry.addData("Left front", leftf.getVelocity());
+        telemetry.addData("Right front", rightf.getVelocity());
+        telemetry.addData("Left Rear", leftr.getVelocity());
+        telemetry.addData("Right Rear", rightr.getVelocity());
+        telemetry.update();
     }
 }
