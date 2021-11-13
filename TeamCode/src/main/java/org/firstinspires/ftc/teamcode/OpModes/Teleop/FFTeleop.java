@@ -60,7 +60,7 @@ public class FFTeleop extends OpMode {
     public void loop() {
         //INITIALIZE ELEVATOR
         //check if we are already in middle position
-        if((initialize_elevator && ffRobot.touch_sensors.get(1).isPressed()) ){
+        if((initialize_elevator && ffRobot.touch_sensors.get(1).isPressed() || manual_override) ){
             initialize_elevator = false;
             go_down_init = false;
             ffRobot.arm_elevator.setPower(0);
@@ -99,13 +99,21 @@ public class FFTeleop extends OpMode {
         }
 
         //PICKUP Functions ------------------------------------------------------------------------
-        //TODO: Create PICKUP functions
+
+        /*if(joy2.onPress.dpad_up){ //pickup
+            ffRobot.flappy_bird.setPower(-1.0);
+        }
+        if(joy2.onPress.dpad_left){ //stop
+            ffRobot.flappy_bird.setPower(0);
+        }
+        if(joy2.onPress.dpad_down){ //throw out
+            ffRobot.flappy_bird.setPower(1.0);
+        }*/
 
         //DELIVERY Functions ------------------------------------------------------------------------
 
         //SET ELEVATOR-----------------------------
         /* Diagram to understand terminology
-        * manual level 2 (space above top touch sensor)
         * touch sensor 2
         * manual level 1 (space between top and mid touch sensors)
         * touch sensor 1
@@ -124,48 +132,50 @@ public class FFTeleop extends OpMode {
 
         //STEP1: Listen to whichever button we press
         if(joy2.onPress.a){ //go to level 0
-            if(!new_level && ffRobot.current_level != 0) {
+            if((!new_level && ffRobot.current_level != 0) || manual_override) {
                 new_level = true;
                 ffRobot.desired_level = 0;
             }
         } else if (joy2.onPress.x) { //go to level 1
 
-            if(!new_level && ffRobot.current_level != 1) {
+            if((!new_level && ffRobot.current_level != 1) || manual_override) {
                 new_level = true;
                 ffRobot.desired_level = 1;
             }
         }else if (joy2.onPress.y) { //go to level 2
-            if (!new_level && ffRobot.current_level != 2) {
+            if ((!new_level && ffRobot.current_level != 2) || manual_override) {
                 new_level = true;
                 ffRobot.desired_level = 2;
             }
         }else if(gamepad2.left_trigger > 0.5){ //go up
-            manual_override = true;
-            new_level = false;
-            ffRobot.arm_elevator.setPower(-1);
-        }else if(gamepad2.right_trigger > 0.5){ //go dow
-            manual_override = true;
-            new_level = false;
-            ffRobot.arm_elevator.setPower(1);
+            if(!ffRobot.touch_sensors.get(2).isPressed()) {
+                manual_override = true;
+                new_level = false;
+                ffRobot.arm_elevator.setPower(-1);
+            }else{
+                ffRobot.arm_elevator.setPower(0);
+            }
+        }else if(gamepad2.right_trigger > 0.5){ //go down
+            if(!ffRobot.touch_sensors.get(0).isPressed()) {
+                manual_override = true;
+                new_level = false;
+                ffRobot.arm_elevator.setPower(1);
+            }else{
+                ffRobot.arm_elevator.setPower(0);
+            }
         }
 
         //STEP2: help determine where we are exactly at all times
         if(ffRobot.touch_sensors.get(1).isPressed()) {
             ffRobot.current_level = 1;
-            if(ffRobot.arm_elevator.getPower() > 0){
+            if(ffRobot.arm_elevator.getPower() < 0){
                 ffRobot.manual_level = 1;
             }
-            if(ffRobot.arm_elevator.getPower() < 0){
+            if(ffRobot.arm_elevator.getPower() > 0){
                 ffRobot.manual_level = 0;
             }
         } else if(ffRobot.touch_sensors.get(2).isPressed()){
             ffRobot.current_level = 2;
-            if(ffRobot.arm_elevator.getPower() > 0){
-                ffRobot.manual_level = 2;
-            }
-            if(ffRobot.arm_elevator.getPower() < 0){
-                ffRobot.manual_level = 1;
-            }
         } else if (ffRobot.touch_sensors.get(0).isPressed()){
             ffRobot.current_level = 0;
         }
@@ -183,7 +193,7 @@ public class FFTeleop extends OpMode {
             }
         }
 
-        //STEP3b: return to automatic elevator (a button was pressed after manual override was enabled)
+        //STEP3b: for transition from manual to automatic elevator, make arm move in direction we want
         //ignored for automatic elevator
         if(manual_override && new_level){
             manual_override = false;
@@ -229,15 +239,16 @@ public class FFTeleop extends OpMode {
         }
 
         //bucket servo
-        boolean bucketboi_open = false;
-        if (joy2.toggle.x) {
+        //boolean bucketboi_open = false;
+        telemetry.addData("toggle b:", joy2.toggle.b);
+        if (joy2.toggle.b) {
             ffRobot.bucketboi.open();
-            bucketboi_open = true;
-            telemetry.addData("opened", "");
-        } else if (joy2.toggle.x){
+            //bucketboi_open = true;
+            //telemetry.addData("opened", joy2.toggle.b);
+        } else if (!joy2.toggle.b){
             ffRobot.bucketboi.close();
-            bucketboi_open = false;
-            telemetry.addData("closed", "");
+            //bucketboi_open = false;
+            //telemetry.addData("closed", joy2.toggle.b);
         }
 
         telemetry.update();

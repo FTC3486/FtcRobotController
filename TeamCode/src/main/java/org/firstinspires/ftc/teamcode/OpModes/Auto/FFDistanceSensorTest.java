@@ -32,9 +32,9 @@ public class FFDistanceSensorTest extends LinearOpMode{
 
 
         while(opModeIsActive()){
-            //telemetry.addData("LeftSensor: ", ffRobot.distance1());
-            //telemetry.addData("RightSensor: ", ffRobot.distance2());
-            //telemetry.update();
+            telemetry.addData("LeftSensor: ", ffRobot.distance_left());
+            telemetry.addData("RightSensor: ", ffRobot.distance_right());
+            telemetry.update();
 
         }
     }

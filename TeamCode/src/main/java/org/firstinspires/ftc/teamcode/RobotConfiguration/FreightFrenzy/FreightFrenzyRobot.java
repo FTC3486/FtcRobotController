@@ -42,20 +42,19 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
 
     public DcMotor extendi;
     public DcMotor arm_elevator;
+    public DcMotor flappy_bird;
 
     public OpenCloseServo bucketboi;
-
-    //public TouchSensor bottom_touch;
-    //public TouchSensor middle_touch;
-    //public TouchSensor top_touch;
+    public ContinuousServo duck_spinner;
 
     public BNO055IMU imu;
     public LinearOpMode opmode;
     public OpMode opmode2;
     public HardwareMap hardwareMap;
 
-    //DistanceSensor distance1;
-    //DistanceSensor distance2;
+    DistanceSensor distance_left;
+    DistanceSensor distance_middle;
+    DistanceSensor distance_right;
 
     public LinkedList<TouchSensor> touch_sensors = new LinkedList<TouchSensor>();
     public int current_level = 1;
@@ -107,9 +106,16 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         touch_sensors.add( hardwareMap.get(TouchSensor.class, "middle_touch") );
         touch_sensors.add( hardwareMap.get(TouchSensor.class, "top_touch") );
 
+        //distance sensors
+        distance_left = hardwareMap.get(DistanceSensor.class, "left_distance_sensor");
+        //distance_middle = hardwareMap.get(DistanceSensor.class, "middle_distance_sensor");
+        distance_right = hardwareMap.get(DistanceSensor.class, "right_distance_sensor");
+
         //Bucket Servo
         final Servo bucketboi = hardwareMap.servo.get("bucketboi");
-        this.bucketboi = new OpenCloseServo(bucketboi, .01, 0.65, 0.25);
+        this.bucketboi = new OpenCloseServo(bucketboi, 0.01, 0.5, 0.01);
+
+
     }
 
     public FreightFrenzyRobot(HardwareMap hardwareMap_, OpMode opmode_) {
@@ -150,6 +156,9 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         final DcMotor arm_elevator = (DcMotor) hardwareMap.dcMotor.get("arm_elevator");
         this.arm_elevator = arm_elevator;
 
+        //final DcMotor flappy_bird = (DcMotor) hardwareMap.dcMotor.get("flappy_bird");
+        //this.flappy_bird = flappy_bird;
+
         //touch sensors
         touch_sensors.add( hardwareMap.get(TouchSensor.class, "bottom_touch") );
         touch_sensors.add( hardwareMap.get(TouchSensor.class, "middle_touch") );
@@ -157,7 +166,10 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
 
         //Bucket Servo
         final Servo bucketboi = hardwareMap.servo.get("bucketboi");
-        this.bucketboi = new OpenCloseServo(bucketboi, 0.1, 0.8, 0.2);
+        this.bucketboi = new OpenCloseServo(bucketboi, 0.05, 0.8, 0.05);
+
+        //final Servo duck_spinner = hardwareMap.servo.get("duck_spinner");
+        //this.duck_spinner = new ContinuousServo(duck_spinner);
     }
 
 
@@ -171,14 +183,55 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         return this.drivetrain;
     }
 
-    /*
-    public double distance1(){
-        return distance1.getDistance(DistanceUnit.INCH);
+
+    public double distance_left(){
+        return distance_left.getDistance(DistanceUnit.INCH);
     }
 
-    public double distance2(){
-        return distance2.getDistance(DistanceUnit.INCH);
-    }*/
+    public double distance_middle(){
+        return distance_middle.getDistance(DistanceUnit.INCH);
+    }
+
+    public double distance_right(){
+        return distance_right.getDistance(DistanceUnit.INCH);
+    }
+
+    //to be used only in autonomous
+    public void initialize_elevator(){
+        if (touch_sensors.get(1).isPressed()) {
+            arm_elevator.setPower(0);
+            return;
+        }
+
+        //if elevator is not already in middle position, go down to bottom and go to middle
+        arm_elevator.setPower(1.0);
+        while(!touch_sensors.get(0).isPressed()){
+            if(touch_sensors.get(1).isPressed()){
+                return;
+            }
+        }
+        arm_elevator.setPower(-1.0);
+
+        //wait until middle sensor is pressed
+        while(!touch_sensors.get(1).isPressed()){}
+        return;
+
+    }
+    //to be used only in autonomous
+    public void setArm_elevator(int desired_level_){
+        desired_level = desired_level;
+
+        if(desired_level > current_level){ //go up
+            arm_elevator.setPower(-1);
+        }
+
+        if(desired_level < current_level){ //go down
+            arm_elevator.setPower(1);
+        }
+        while(!touch_sensors.get(desired_level).isPressed()){ //stay
+            arm_elevator.setPower(0);
+        }
+    }
 };
 
 

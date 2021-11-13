@@ -4,13 +4,17 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.UltimateGoal.UltimateGoalRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.TeleopDriver;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
+
+import java.util.LinkedList;
 
 /*
     Filename: UltimateGoalAutoBlue.java
@@ -36,25 +40,29 @@ public class FFAutoBlue1 extends LinearOpMode {
     BNO055IMU               imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
+    boolean top_wobble_goal = false;
+    boolean mid_wobble_goal = false;
+    boolean bottom_wobble_goal = false;
+
     @Override
     public void runOpMode() {
 
 
-        final UltimateGoalRobot ultimateGoalRobot = new UltimateGoalRobot(this.hardwareMap);
-        final EncoderAutoDriver encoderAutoDriver = new EncoderAutoDriver(ultimateGoalRobot, this);
+        final FreightFrenzyRobot ffRobot = new FreightFrenzyRobot(this.hardwareMap, this);
+        final EncoderAutoDriver encoderAutoDriver = new EncoderAutoDriver(ffRobot, this);
         ExpansionHubEx expansionHub;
         RevBulkData bulkData;
         ExpansionHubMotor leftf, leftr, rightf, rightr;
         //RangeAutoDriver rangeAutoDriver = new RangeAutoDriver(rover, this);
-        ultimateGoalRobot.getDrivetrain().resetMotorEncoders();
-        ultimateGoalRobot.initialize();
+        ffRobot.getDrivetrain().resetMotorEncoders();
+        ffRobot.initialize();
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         bulkData = expansionHub.getBulkInputData();
         expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
         leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
-        ultimateGoalRobot.armGripServo.close();
+        ffRobot.bucketboi.close();
         waitForStart();
         encoderAutoDriver.setPower(1);
 
@@ -74,7 +82,36 @@ public class FFAutoBlue1 extends LinearOpMode {
             sleep(50);
             idle();
         }
-        ultimateGoalRobot.getDrivetrain().setPowers(-.3, -.3);
+        ffRobot.getDrivetrain().setPowers(-.3, -.3);
+
+        //CHECK FOR TEAM MARKER
+        //left = 0, middle = 1, right = 2
+        int winning_sensor = 0;
+        int[] sensor_detections = {0,0,0};
+
+        //left sensor means bottom wobble goal
+        //mid sensor means mid wobble goal
+        //right sensor mean top wobble goal
+
+        for(int i = 0; i < 50; i++) {
+            if (ffRobot.distance_left() < 15) {
+                sensor_detections[0]++;
+            } else if (ffRobot.distance_middle() < 15) {
+                sensor_detections[1]++;
+            } else if (ffRobot.distance_right() < 15) {
+                sensor_detections[2]++;
+            }
+        }
+
+        //determine winning sensor
+        for(int i = 0; i < sensor_detections.length; i++){
+            if(sensor_detections[winning_sensor] < sensor_detections[i]){
+                winning_sensor = i;
+            }
+        }
+
+
+        //DO MOVEMENT
 
         //move forward a little so rotation doesn't hit wall
         encoderAutoDriver.driveToDistance(3, 0.5);
