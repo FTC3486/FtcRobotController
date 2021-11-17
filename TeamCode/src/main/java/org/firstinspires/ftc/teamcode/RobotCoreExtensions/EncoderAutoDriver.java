@@ -353,6 +353,9 @@ public class EncoderAutoDriver extends AutoDriver {
 
         while(opMode.opModeIsActive() && stop_counter < start_time + 5000){
 
+            opMode.telemetry.addData("encoder count: ", DT.getLeftEncoderCount());
+            opMode.telemetry.addData("goal encoder count: ", DT.convertInchesToEncoderCounts(inches));
+
             //we are going forward
             if(DT.getLeftEncoderCount() > DT.convertInchesToEncoderCounts(inches) && power > 0)
                 break;
@@ -384,10 +387,10 @@ public class EncoderAutoDriver extends AutoDriver {
 
             correction = P + I + D;
 
-            if(correction > 0.5){
-                correction = 0.5;
-            } else if (correction < -0.5){
-                correction = -0.5;
+            if(correction > 0.1){
+                correction = 0.1;
+            } else if (correction < -0.1){
+                correction = -0.1;
             }
 
             //corrections should be very small

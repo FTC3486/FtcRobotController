@@ -45,8 +45,6 @@ public class FFTeleop extends OpMode {
         leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
         rightf = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightf");
 
-        teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.FORWARD);
-
         //automatic elevator bools
         initialize_elevator = true;
         go_down_init = true;
@@ -87,6 +85,7 @@ public class FFTeleop extends OpMode {
 
         //Drivetrain*******************************************************
 
+        teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.BACKWARD);
         //Toggle Half Speed on the drivetrain
         if (gamepad1.left_trigger > 0) {
             // control the drive train at full speed

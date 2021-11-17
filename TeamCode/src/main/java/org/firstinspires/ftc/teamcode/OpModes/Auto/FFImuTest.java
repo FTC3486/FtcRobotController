@@ -66,7 +66,12 @@ public class FFImuTest extends LinearOpMode {
         ffRobot.bucketboi.close();
         sleep(1000);
 
-        //ffRobot.
+
+        encoderAutoDriver.rotateCounterClockwise(90, hardwareMap);
+        sleep(500);
+
+        //encoderAutoDriver.driveStraight(5, 0.2, hardwareMap);
+        //sleep(500);
 
         /*encoderAutoDriver.rotateClockwise(45, hardwareMap);
         sleep(500);
