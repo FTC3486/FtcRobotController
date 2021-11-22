@@ -238,16 +238,10 @@ public class FFTeleop extends OpMode {
         }
 
         //bucket servo
-        //boolean bucketboi_open = false;
-        telemetry.addData("toggle b:", joy2.toggle.b);
         if (joy2.toggle.b) {
             ffRobot.bucketboi.open();
-            //bucketboi_open = true;
-            //telemetry.addData("opened", joy2.toggle.b);
         } else if (!joy2.toggle.b){
             ffRobot.bucketboi.close();
-            //bucketboi_open = false;
-            //telemetry.addData("closed", joy2.toggle.b);
         }
 
         telemetry.update();
