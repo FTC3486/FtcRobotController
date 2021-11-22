@@ -58,19 +58,12 @@ public class FFTeleop extends OpMode {
     public void loop() {
         //INITIALIZE ELEVATOR
         //check if we are already in middle position
-        if((initialize_elevator && ffRobot.touch_sensors.get(1).isPressed() || manual_override) ){
+        if((initialize_elevator && ffRobot.touch_sensors.get(2).isPressed() || manual_override && initialize_elevator) ){
             initialize_elevator = false;
-            go_down_init = false;
             ffRobot.arm_elevator.setPower(0);
         }
 
-        //if elevator is not already in middle position, go down to bottom and go to middle
-        if(initialize_elevator && go_down_init) {
-            ffRobot.arm_elevator.setPower(1.0);
-            go_down_init = false;
-        }
-
-        if( (initialize_elevator && ffRobot.touch_sensors.get(0).isPressed())){
+        if(initialize_elevator){
             ffRobot.arm_elevator.setPower(-1.0);
         }
         //-----------------------------------------------------------------

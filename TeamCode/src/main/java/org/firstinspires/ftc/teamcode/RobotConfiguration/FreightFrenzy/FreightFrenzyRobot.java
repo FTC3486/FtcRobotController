@@ -57,8 +57,8 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
     DistanceSensor distance_right;
 
     public LinkedList<TouchSensor> touch_sensors = new LinkedList<TouchSensor>();
-    public int current_level = 1;
-    public int desired_level = 1;
+    public int current_level = 2;
+    public int desired_level = 2;
     public int manual_level = 1;
 
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
