@@ -15,6 +15,7 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 @TeleOp(name = "Test Motor", group = "Teleop2021")
+@Disabled
 public class TestMotor extends OpMode {
     //Declare parts of the robot that will be used by this Teleop
     ExpansionHubMotor leftf, rightf, rightr,leftr;

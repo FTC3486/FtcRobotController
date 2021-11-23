@@ -88,10 +88,10 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
         this.drivetrain = new Drivetrain.Builder()
-                .addLeftMotorWithEncoder(backRight)
-                .addLeftMotor(frontRight)
-                .addRightMotor(frontLeft)
-                .addRightMotorWithEncoder(backLeft)
+                .addLeftMotorWithEncoder(frontRight)
+                .addLeftMotor(backRight)
+                .addRightMotor(backLeft)
+                .addRightMotorWithEncoder(frontLeft)
                 .setGearRatio(1.2)
                 .build();
 
@@ -198,22 +198,15 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
 
     //to be used only in autonomous
     public void initialize_elevator(){
-        if (touch_sensors.get(1).isPressed()) {
+        if (touch_sensors.get(2).isPressed()) {
             arm_elevator.setPower(0);
             return;
         }
 
-        //if elevator is not already in middle position, go down to bottom and go to middle
-        arm_elevator.setPower(1.0);
-        while(!touch_sensors.get(0).isPressed()){
-            if(touch_sensors.get(1).isPressed()){
-                return;
-            }
-        }
         arm_elevator.setPower(-1.0);
 
         //wait until middle sensor is pressed
-        while(!touch_sensors.get(1).isPressed()){}
+        while(!touch_sensors.get(2).isPressed()){}
         return;
 
     }

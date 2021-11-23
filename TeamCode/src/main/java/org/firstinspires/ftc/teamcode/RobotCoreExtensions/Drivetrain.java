@@ -174,7 +174,7 @@ public class Drivetrain {
 
     public long convertInchesToEncoderCounts(double distance) {
         float fudge_factor = 1;
-        return (long) (Math.round(((distance / (Math.PI * wheelDiameter)) / gearRatio) *
+        return (long) (Math.round(((0.5*distance / (Math.PI * wheelDiameter)) / gearRatio) *
                 encoderCountsPerDriverGearRotation) / fudge_factor);
     }
 

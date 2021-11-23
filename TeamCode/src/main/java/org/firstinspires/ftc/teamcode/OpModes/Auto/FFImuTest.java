@@ -67,11 +67,11 @@ public class FFImuTest extends LinearOpMode {
         sleep(1000);
 
 
-        encoderAutoDriver.rotateCounterClockwise(90, hardwareMap);
-        sleep(500);
-
-        //encoderAutoDriver.driveStraight(5, 0.2, hardwareMap);
+        //encoderAutoDriver.rotateCounterClockwise(90, hardwareMap);
         //sleep(500);
+
+        encoderAutoDriver.driveStraight(20, 0.5, hardwareMap);
+        sleep(500);
 
         /*encoderAutoDriver.rotateClockwise(45, hardwareMap);
         sleep(500);
