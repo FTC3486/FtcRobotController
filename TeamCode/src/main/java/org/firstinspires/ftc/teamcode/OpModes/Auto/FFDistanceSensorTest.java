@@ -26,15 +26,15 @@ public class FFDistanceSensorTest extends LinearOpMode{
         telemetry.addData("Test", ffRobot.getDrivetrain().getLeftEncoderCount());
         ffRobot.getDrivetrain().resetMotorEncoders();
         ffRobot.initialize();
-        ffRobot.bucketboi.close();
+
         encoderAutoDriver.setImu(ffRobot.imu);
         waitForStart();
 
 
         while(opModeIsActive()){
-            telemetry.addData("LeftSensor: ", ffRobot.distance_left());
-            telemetry.addData("RightSensor: ", ffRobot.distance_right());
-            telemetry.update();
+          //  telemetry.addData("LeftSensor: ", ffRobot.distance_left());
+           // telemetry.addData("RightSensor: ", ffRobot.distance_right());
+           // telemetry.update();
 
         }
     }

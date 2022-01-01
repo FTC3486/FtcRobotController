@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
+import org.firstinspires.ftc.teamcode.Subsystems.DiscreteServo;
 import org.firstinspires.ftc.teamcode.Subsystems.VelocityMotor;
 import org.firstinspires.ftc.teamcode.Subsystems.OpenCloseServo;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.ContinuousServo;
@@ -40,27 +41,26 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    public DcMotor extendi;
-    public DcMotor arm_elevator;
-    public DcMotor flappy_bird;
+    public DcMotor duckSpinner;
 
-    public OpenCloseServo bucketboi;
-    public ContinuousServo duck_spinner;
+
 
     public BNO055IMU imu;
     public LinearOpMode opmode;
     public OpMode opmode2;
     public HardwareMap hardwareMap;
 
-    DistanceSensor distance_left;
-    DistanceSensor distance_middle;
-    DistanceSensor distance_right;
+    //DistanceSensor distance_left;
+    //DistanceSensor distance_middle;
+    //DistanceSensor distance_right;
 
+    /*
     public LinkedList<TouchSensor> touch_sensors = new LinkedList<TouchSensor>();
+
     public int current_level = 2;
     public int desired_level = 2;
     public int manual_level = 1;
-
+        */
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     public FreightFrenzyRobot(HardwareMap hardwareMap_, LinearOpMode opmode_) {
@@ -73,6 +73,9 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         backLeft = hardwareMap.dcMotor.get("leftr");
         frontRight = hardwareMap.dcMotor.get("rightf");
         backRight = hardwareMap.dcMotor.get("rightr");
+
+        DcMotor duckSpinner = hardwareMap.dcMotor.get("duckSpinner");
+        this.duckSpinner = duckSpinner;
 
         //initialize imu
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -96,28 +99,7 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
                 .build();
 
         //other motors
-        final DcMotor extendi = (DcMotor) hardwareMap.dcMotor.get("extendi");
-        this.extendi = extendi;
-        final DcMotor arm_elevator = (DcMotor) hardwareMap.dcMotor.get("arm_elevator");
-        this.arm_elevator = arm_elevator;
-
-        //touch sensors
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "bottom_touch") );
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "middle_touch") );
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "top_touch") );
-
-        //distance sensors
-        distance_left = hardwareMap.get(DistanceSensor.class, "left_distance_sensor");
-        //distance_middle = hardwareMap.get(DistanceSensor.class, "middle_distance_sensor");
-        distance_right = hardwareMap.get(DistanceSensor.class, "right_distance_sensor");
-
-        //Bucket Servo
-        final Servo bucketboi = hardwareMap.servo.get("bucketboi");
-        this.bucketboi = new OpenCloseServo(bucketboi, 0.01, 0.5, 0.01);
-
-
     }
-
     public FreightFrenzyRobot(HardwareMap hardwareMap_, OpMode opmode_) {
         //initialize opmode and hardwareMap
         opmode2 = opmode_;
@@ -128,6 +110,9 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         backLeft = hardwareMap.dcMotor.get("leftr");
         frontRight = hardwareMap.dcMotor.get("rightf");
         backRight = hardwareMap.dcMotor.get("rightr");
+
+        DcMotor duckSpinner = hardwareMap.dcMotor.get("duckSpinner");
+        this.duckSpinner = duckSpinner;
 
         //initialize imu
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -150,32 +135,31 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
                 .setGearRatio(1.2)
                 .build();
 
-        //other motors
-        final DcMotor extendi = (DcMotor) hardwareMap.dcMotor.get("extendi");
-        this.extendi = extendi;
-        final DcMotor arm_elevator = (DcMotor) hardwareMap.dcMotor.get("arm_elevator");
-        this.arm_elevator = arm_elevator;
 
-        //final DcMotor flappy_bird = (DcMotor) hardwareMap.dcMotor.get("flappy_bird");
-        //this.flappy_bird = flappy_bird;
-
-        //touch sensors
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "bottom_touch") );
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "middle_touch") );
-        touch_sensors.add( hardwareMap.get(TouchSensor.class, "top_touch") );
-
-        //Bucket Servo
-        final Servo bucketboi = hardwareMap.servo.get("bucketboi");
-        this.bucketboi = new OpenCloseServo(bucketboi, 0.05, 0.8, 0.05);
-
-        //final Servo duck_spinner = hardwareMap.servo.get("duck_spinner");
-        //this.duck_spinner = new ContinuousServo(duck_spinner);
     }
+
+    public enum MarkerArmServoPosition implements DiscreteServo.DiscreteServoPosition {
+
+        Initialized(.5),
+        Down(0.555),
+        Middle(0.68),
+        Up(.7);
+
+        private final double position;
+
+        MarkerArmServoPosition(double position) {
+            this.position = position;
+        };
+
+        @Override
+        public double getPosition() {
+            return position;
+        };    }
 
 
     @Override
     public void initialize() {
-        bucketboi.initialize();
+
     }
 
     @Override
@@ -183,7 +167,7 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         return this.drivetrain;
     }
 
-
+    /*
     public double distance_left(){
         return distance_left.getDistance(DistanceUnit.INCH);
     }
@@ -225,6 +209,8 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
             arm_elevator.setPower(0);
         }
     }
+    */
+
 };
 
 

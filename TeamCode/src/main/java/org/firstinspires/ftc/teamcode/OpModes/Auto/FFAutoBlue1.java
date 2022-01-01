@@ -62,7 +62,6 @@ public class FFAutoBlue1 extends LinearOpMode {
         //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
         leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
-        ffRobot.bucketboi.close();
         waitForStart();
         encoderAutoDriver.setPower(1);
 
@@ -77,32 +76,35 @@ public class FFAutoBlue1 extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         encoderAutoDriver.setImu(imu);
         imu.initialize(parameters);
+        /*
         while (!isStopRequested() && !imu.isGyroCalibrated())
         {
             sleep(50);
             idle();
         }
-        ffRobot.getDrivetrain().setPowers(-.3, -.3);
+        */
+
+        //ffRobot.getDrivetrain().setPowers(-.3, -.3);
 
         //CHECK FOR TEAM MARKER
         //left = 0, middle = 1, right = 2
-        int winning_sensor = 0;
-        int[] sensor_detections = {0,0,0};
+       // int winning_sensor = 0;
+     //   int[] sensor_detections = {0,0,0};
 
         //left sensor means bottom wobble goal
         //mid sensor means mid wobble goal
         //right sensor mean top wobble goal
-
+ //(ffRobot.distance_right() < 15) {
+               // sensor_detections[2]++;
+   //         }
+    //    }
+/*
         for(int i = 0; i < 50; i++) {
             if (ffRobot.distance_left() < 15) {
                 sensor_detections[0]++;
             } else if (ffRobot.distance_middle() < 15) {
                 sensor_detections[1]++;
-            } else if (ffRobot.distance_right() < 15) {
-                sensor_detections[2]++;
-            }
-        }
-
+            } else if
         //determine winning sensor
         for(int i = 0; i < sensor_detections.length; i++){
             if(sensor_detections[winning_sensor] < sensor_detections[i]){
@@ -142,7 +144,7 @@ public class FFAutoBlue1 extends LinearOpMode {
 
         telemetry.update();
         sleep(5000);
-
+*/
 
     }
 }
