@@ -21,7 +21,7 @@ public class FFDistanceSensorTest extends LinearOpMode{
     @Override
     public void runOpMode() {
         //setup
-        ffRobot = new FreightFrenzyRobot(this.hardwareMap, this);
+        ffRobot = new FreightFrenzyRobot(this.hardwareMap);
         encoderAutoDriver = new EncoderAutoDriver(ffRobot, this);
         telemetry.addData("Test", ffRobot.getDrivetrain().getLeftEncoderCount());
         ffRobot.getDrivetrain().resetMotorEncoders();

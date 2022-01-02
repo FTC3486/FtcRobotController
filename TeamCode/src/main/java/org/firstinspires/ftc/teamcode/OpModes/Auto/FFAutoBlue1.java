@@ -48,7 +48,7 @@ public class FFAutoBlue1 extends LinearOpMode {
     public void runOpMode() {
 
 
-        final FreightFrenzyRobot ffRobot = new FreightFrenzyRobot(this.hardwareMap, this);
+        final FreightFrenzyRobot ffRobot = new FreightFrenzyRobot(this.hardwareMap);
         final EncoderAutoDriver encoderAutoDriver = new EncoderAutoDriver(ffRobot, this);
         ExpansionHubEx expansionHub;
         RevBulkData bulkData;

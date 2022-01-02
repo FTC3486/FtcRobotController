@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.OpModes.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,7 +11,7 @@ import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
 //@Disabled
-@TeleOp (name = "FF Goal Teleop", group = "Teleop2020-21")
+@TeleOp(name = "FF Goal Teleop", group = "Teleop2020-21")
 public class FFTeleop extends OpMode {
     private FreightFrenzyRobot ffRobot;
     //Create joysticks
@@ -36,8 +35,7 @@ public class FFTeleop extends OpMode {
 
     @Override
     public void init() {
-        ffRobot = new FreightFrenzyRobot(this.hardwareMap, this);
-        ffRobot.initialize();
+        ffRobot = new FreightFrenzyRobot(this.hardwareMap);
         teleopDriver = new TeleopDriver(ffRobot);
         teleopDriver.setMinSpeed(0.2);
 
@@ -78,7 +76,6 @@ public class FFTeleop extends OpMode {
         */
 
 
-
         //-----------------------------------------------------------------
         //Gamepad 1 is the driver controller, gamepad 2 is the gunner controller
 
@@ -89,6 +86,7 @@ public class FFTeleop extends OpMode {
 
         telemetry.addData("Left Rear", leftf.getVelocity());
         telemetry.addData("Right Rear", rightf.getVelocity());
+        telemetry.addData("FlySwatter", ffRobot.flySwatter);
 
         //Drivetrain*******************************************************
 
@@ -104,154 +102,42 @@ public class FFTeleop extends OpMode {
             teleopDriver.setMaxSpeed(.6f);
         }
 
-        if(joy1.toggle.a)
-        {
+        if (joy1.toggle.a) {
             ffRobot.duckSpinner.setPower(.75);
-        }
-        else
-        {
+        } else {
             ffRobot.duckSpinner.setPower(0);
         }
 
-        //PICKUP Functions ------------------------------------------------------------------------
-
-        /*if(joy2.onPress.dpad_up){ //pickup
-            ffRobot.flappy_bird.setPower(-1.0);
-        }
-        if(joy2.onPress.dpad_left){ //stop
-            ffRobot.flappy_bird.setPower(0);
-        }
-        if(joy2.onPress.dpad_down){ //throw out
-            ffRobot.flappy_bird.setPower(1.0);
-        }*/
-
-        //DELIVERY Functions ------------------------------------------------------------------------
-
-        //SET ELEVATOR-----------------------------
-        /* Diagram to understand terminology
-         * touch sensor 2
-         * manual level 1 (space between top and mid touch sensors)
-         * touch sensor 1
-         * manual level 0 (space between mid and bottom touch sensors)
-         * touch sensor 0
-         *
-         * Note:
-         * current_level corresponds to the touch sensors levels, not the manual levels
-         * new_level is only true during automatic elevator and becomes false when we reach goal.
-         * manual_override is only true if a trigger is hit. it remains true until a, x, or y are pressed.
-         *
-         * Note2:
-         * if you wish to disable automatic elevator, simply comment out everything in this section
-         * after STEP1 (except STEP4a)
-         * */
-
-        //STEP1: Listen to whichever button we press
-        /*
-        if(joy2.onPress.a){ //go to level 0
-            if((!new_level && ffRobot.current_level != 0) || manual_override) {
-                new_level = true;
-                ffRobot.desired_level = 0;
-            }
-        } else if (joy2.onPress.x) { //go to level 1
-
-            if((!new_level && ffRobot.current_level != 1) || manual_override) {
-                new_level = true;
-                ffRobot.desired_level = 1;
-            }
-        }else if (joy2.onPress.y) { //go to level 2
-            if ((!new_level && ffRobot.current_level != 2) || manual_override) {
-                new_level = true;
-                ffRobot.desired_level = 2;
-            }
-            */
-
-        /*}else
-        if (gamepad1.dpad_up) { //go up
-
-            if (!ffRobot.touch_sensors.get(2).isPressed()) {
-                manual_override = true;
-                new_level = false;
-                ffRobot.arm_elevator.setPower(-1);
-            } else {
-                ffRobot.arm_elevator.setPower(0);
-            }
-        } else if (gamepad1.dpad_down) { //go down
-            if (!ffRobot.touch_sensors.get(0).isPressed()) {
-                manual_override = true;
-                new_level = false;
-                ffRobot.arm_elevator.setPower(1);
-            } else {
-                ffRobot.arm_elevator.setPower(0);
-            }
+        // Arm
+        if (gamepad2.a) {
+            ffRobot.flySwatter.armLow();
+        } else if (gamepad2.x) {
+            ffRobot.flySwatter.armMiddle();
+        } else if (gamepad2.y) {
+            ffRobot.flySwatter.armHigh();
+        } else if (gamepad2.b) {
+            ffRobot.flySwatter.armPickup();
+        } else if (Math.abs(gamepad2.right_stick_y) > 0.2) {
+            ffRobot.flySwatter.arm(-gamepad2.right_stick_y);
+        } else {
+            ffRobot.flySwatter.armStop();
         }
 
-
-
-        //STEP2: help determine where we are exactly at all times
-
-        if (ffRobot.touch_sensors.get(1).isPressed()) {
-            ffRobot.current_level = 1;
-            if (ffRobot.arm_elevator.getPower() < 0) {
-                ffRobot.manual_level = 1;
-            }
-            if (ffRobot.arm_elevator.getPower() > 0) {
-                ffRobot.manual_level = 0;
-            }
-        } else if (ffRobot.touch_sensors.get(2).isPressed()) {
-            ffRobot.current_level = 2;
-        } else if (ffRobot.touch_sensors.get(0).isPressed()) {
-            ffRobot.current_level = 0;
+        // Wrist
+        if (gamepad2.left_bumper) {
+            ffRobot.flySwatter.wristUp();
+        } else if (gamepad2.left_trigger > 0.5) {
+            ffRobot.flySwatter.wristDown();
         }
 
-        //STEP3a: for automatic elevator make arm move in direction we want
-        //ignored for manual elevator
-       /* if(ffRobot.current_level != ffRobot.desired_level && !manual_override){
-
-            if(ffRobot.desired_level > ffRobot.current_level){
-                ffRobot.arm_elevator.setPower(-1);
-            }
-
-            if(ffRobot.desired_level < ffRobot.current_level){
-                ffRobot.arm_elevator.setPower(1);
-            }
+        // Flapper
+        if (gamepad2.right_bumper) {
+            ffRobot.flySwatter.flapperForward();
+        } else if (gamepad2.right_trigger > 0.5) {
+            ffRobot.flySwatter.flapperReverse();
+        } else {
+            ffRobot.flySwatter.flapperStop();
         }
-        */
-
-
-        //STEP3b: for transition from manual to automatic elevator, make arm move in direction we want
-        //ignored for automatic elevator
-        /*
-        if (manual_override && new_level) {
-            manual_override = false;
-            if (ffRobot.desired_level > ffRobot.manual_level) { //go up
-                ffRobot.arm_elevator.setPower(-1);
-            }
-
-            if (ffRobot.desired_level <= ffRobot.manual_level) { //go down
-                ffRobot.arm_elevator.setPower(1);
-            }
-        }
-        */
-
-
-        //STEP4a: stop elevator if triggers aren't pressed and manual override is active
-        //ignored for automatic elevator
-        /*
-
-        if (manual_override && gamepad2.left_trigger < 0.5
-                && gamepad2.right_trigger < 0.5 && ffRobot.arm_elevator.getPower() != 0) {
-            ffRobot.arm_elevator.setPower(0);
-        }
-
-        //STEP4b: stop the automatic elevator when it reaches its destination
-        // ignored for manual elevator (except for transition between manual to automatic)
-        if (new_level && ffRobot.touch_sensors.get(ffRobot.desired_level).isPressed()) {
-            ffRobot.arm_elevator.setPower(0);
-            new_level = false;
-        }
-        */
-
-
     }
 }
 
