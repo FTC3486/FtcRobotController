@@ -45,14 +45,13 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
 
         //
         this.flySwatter = new FlySwatter(
-                hardwareMap.dcMotor.get("arm1"),
-                hardwareMap.dcMotor.get("arm2"),
+                hardwareMap.dcMotor.get("arm"),
                 hardwareMap.servo.get("wrist"),
                 hardwareMap.dcMotor.get("flapper"),
-                hardwareMap.digitalChannel.get("armLow"),
-                hardwareMap.digitalChannel.get("armMiddle"),
                 hardwareMap.digitalChannel.get("armHigh"),
                 hardwareMap.digitalChannel.get("armPickup"),
+                9000L,  // low at ground
+                100L, // pickup at ground
                 .5,
                 .5,
                 .5,

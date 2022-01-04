@@ -57,6 +57,9 @@ public class FFTeleop extends OpMode {
         //ffRobot.markerArm.setPosition(0.5);
         //ffRobot.markerHand.setPosition(0.5);
         double armPos = 0;
+
+        telemetry.addData("FlySwatter", ffRobot.flySwatter);
+        telemetry.update();
     }
 
     @Override
@@ -109,11 +112,7 @@ public class FFTeleop extends OpMode {
         }
 
         // Arm
-        if (gamepad2.a) {
-            ffRobot.flySwatter.armLow();
-        } else if (gamepad2.x) {
-            ffRobot.flySwatter.armMiddle();
-        } else if (gamepad2.y) {
+        if (gamepad2.y) {
             ffRobot.flySwatter.armHigh();
         } else if (gamepad2.b) {
             ffRobot.flySwatter.armPickup();
