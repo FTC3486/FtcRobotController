@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.GamepadWrapper;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.TeleopDriver;
-import org.openftc.revextensions2.ExpansionHubEx;
-import org.openftc.revextensions2.ExpansionHubMotor;
-import org.openftc.revextensions2.RevBulkData;
+//import org.openftc.revextensions2.ExpansionHubEx;
+//import org.openftc.revextensions2.ExpansionHubMotor;
+//import org.openftc.revextensions2.RevBulkData;
 
 //@Disabled
 @TeleOp(name = "FF Goal Teleop", group = "Teleop2020-21")
@@ -20,9 +20,9 @@ public class FFTeleop extends OpMode {
     //Create robot driver
     private TeleopDriver teleopDriver;
     //Creates elements for extra data
-    ExpansionHubEx expansionHub;
-    RevBulkData bulkData;
-    ExpansionHubMotor leftf, leftr, rightf, rightr;
+    //ExpansionHubEx expansionHub;
+    //RevBulkData bulkData;
+    //ExpansionHubMotor leftf, leftr, rightf, rightr;
 
     //elevator bools
     boolean initialize_elevator;
@@ -42,9 +42,9 @@ public class FFTeleop extends OpMode {
         ffRobot.initialize();
 
         //telemetry output
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 3");
-        leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
-        rightf = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightf");
+        //expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 3");
+        //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
+        //rightf = (ExpansionHubMotor) hardwareMap.dcMotor.get("rightf");
 
         //automatic elevator bools
         // initialize_elevator = true;
@@ -85,10 +85,10 @@ public class FFTeleop extends OpMode {
         joy1.update(gamepad1);
         joy2.update(gamepad2);
 
-        bulkData = expansionHub.getBulkInputData();
+        //bulkData = expansionHub.getBulkInputData();
 
-        telemetry.addData("Left Rear", leftf.getVelocity());
-        telemetry.addData("Right Rear", rightf.getVelocity());
+        //telemetry.addData("Left Rear", leftf.getVelocity());
+        //telemetry.addData("Right Rear", rightf.getVelocity());
         telemetry.addData("FlySwatter", ffRobot.flySwatter);
 
         //Drivetrain*******************************************************
@@ -97,16 +97,18 @@ public class FFTeleop extends OpMode {
         //Toggle Half Speed on the drivetrain
         if (gamepad1.left_trigger > 0) {
             // control the drive train at full speed
-            teleopDriver.setMaxSpeed(.75f);
+            teleopDriver.setMaxSpeed(.6f);
         } else if (gamepad1.right_trigger > 0) {
             teleopDriver.setMaxSpeed(.3f);
         } else {
             // control the drive train at 1/2 speed - Normal driving
-            teleopDriver.setMaxSpeed(.6f);
+            teleopDriver.setMaxSpeed(.4f);
         }
 
-        if (joy1.toggle.a) {
+        if (gamepad1.a && !gamepad1.x) {
             ffRobot.duckSpinner.setPower(.75);
+        } else if (gamepad1.x && !gamepad1.a) {
+            ffRobot.duckSpinner.setPower(-.75);
         } else {
             ffRobot.duckSpinner.setPower(0);
         }
@@ -117,14 +119,14 @@ public class FFTeleop extends OpMode {
         } else if (gamepad2.b) {
             ffRobot.flySwatter.armPickup();
         } else if (Math.abs(gamepad2.right_stick_y) > 0.2) {
-            ffRobot.flySwatter.arm(-gamepad2.right_stick_y);
+            ffRobot.flySwatter.arm(-(gamepad2.right_stick_y)); //-(gamepad2.right_stick_y)
         } else {
             ffRobot.flySwatter.armStop();
         }
 
         // Wrist
+        ffRobot.flySwatter.wristUp();
         if (gamepad2.left_bumper) {
-            ffRobot.flySwatter.wristUp();
         } else if (gamepad2.left_trigger > 0.5) {
             ffRobot.flySwatter.wristDown();
         }
@@ -136,6 +138,14 @@ public class FFTeleop extends OpMode {
             ffRobot.flySwatter.flapperReverse();
         } else {
             ffRobot.flySwatter.flapperStop();
+        }
+
+        if (gamepad2.x && !gamepad2.a) {
+            ffRobot.extendi.setPower(0.9);
+        } else if (gamepad2.a && !gamepad2.x) {
+            ffRobot.extendi.setPower(-0.9);
+        } else {
+            ffRobot.extendi.setPower(0);
         }
     }
 }

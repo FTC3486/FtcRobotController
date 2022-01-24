@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
@@ -16,6 +17,10 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
     public final BNO055IMU imu;
     public final DcMotor duckSpinner;
     public final FlySwatter flySwatter;
+    public final DcMotor extendi;
+
+    public final DistanceSensor distance1;
+    public final DistanceSensor distance2;
 
     public FreightFrenzyRobot(HardwareMap hardwareMap) {
         // Drivetrain
@@ -23,6 +28,8 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         final DcMotor backLeft = hardwareMap.dcMotor.get("leftr");
         final DcMotor frontRight = hardwareMap.dcMotor.get("rightf");
         final DcMotor backRight = hardwareMap.dcMotor.get("rightr");
+
+        //final DcMotor extendi = hardwareMap.dcMotor.get("extendi");
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -40,8 +47,13 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         // vertical wheel thing
         this.duckSpinner = hardwareMap.dcMotor.get("duckSpinner");
 
+        this.extendi = hardwareMap.dcMotor.get("extendi");
+
         // imu
         this.imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        this.distance1 = hardwareMap.get(DistanceSensor.class, "distance1");
+        this.distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
 
         //
         this.flySwatter = new FlySwatter(
@@ -52,8 +64,8 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
                 hardwareMap.digitalChannel.get("armPickup"),
                 9000L,  // low at ground
                 100L, // pickup at ground
-                .5,
-                .5,
+                .3,
+                .6,
                 .5,
                 1.0,
                 .5  // should still be positive

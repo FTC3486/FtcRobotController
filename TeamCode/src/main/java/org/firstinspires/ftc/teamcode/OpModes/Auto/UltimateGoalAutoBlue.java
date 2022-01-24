@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareDeviceCloseOnTearDown;
 
@@ -43,6 +44,7 @@ import org.openftc.revextensions2.RevBulkData;
  *     -Created by Saatvik on 12/27/20.
  *     -
  */
+@Disabled
 @Autonomous(name = "Ultimate Goal Auto Blue", group = "Blue", preselectTeleOp = "UltimateGoalTeleop")
 public class UltimateGoalAutoBlue extends LinearOpMode {
 

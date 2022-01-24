@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -33,7 +34,7 @@ import java.util.LinkedList;
  *     -Created by Saatvik on 12/22/20.
  *     -
  */
-
+@Disabled
 @Autonomous (group = "Blue" )
 public class FFAutoBlue1 extends LinearOpMode {
 
@@ -56,9 +57,9 @@ public class FFAutoBlue1 extends LinearOpMode {
         //RangeAutoDriver rangeAutoDriver = new RangeAutoDriver(rover, this);
         ffRobot.getDrivetrain().resetMotorEncoders();
         ffRobot.initialize();
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
-        bulkData = expansionHub.getBulkInputData();
-        expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+        //expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
+        //bulkData = expansionHub.getBulkInputData();
+        //expansionHub = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2");
         //leftf = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftf");
         leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 

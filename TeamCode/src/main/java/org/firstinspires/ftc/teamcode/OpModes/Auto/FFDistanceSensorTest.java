@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
-
 @Autonomous
+@Disabled
 public class FFDistanceSensorTest extends LinearOpMode{
     private FreightFrenzyRobot ffRobot;
     EncoderAutoDriver encoderAutoDriver;
 
 
-    DistanceSensor distance1;
-    DistanceSensor distance2;
+
+
 
     @Override
     public void runOpMode() {
@@ -32,9 +34,9 @@ public class FFDistanceSensorTest extends LinearOpMode{
 
 
         while(opModeIsActive()){
-          //  telemetry.addData("LeftSensor: ", ffRobot.distance_left());
-           // telemetry.addData("RightSensor: ", ffRobot.distance_right());
-           // telemetry.update();
+         // telemetry.addData("LeftSensor: ", ffRobot.distance2.getDistance(DistanceUnit.INCH));
+           //telemetry.addData("RightSensor: ", ffRobot.distance1.getDistance(DistanceUnit.INCH));
+           telemetry.update();
 
         }
     }
