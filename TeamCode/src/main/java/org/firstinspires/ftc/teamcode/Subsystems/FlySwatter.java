@@ -11,12 +11,14 @@ public class FlySwatter implements Initializable {
     private final DcMotor arm;
     private final Servo wrist;
     private final DcMotor flapper;
-    private final DigitalChannel armHigh;
-    private final DigitalChannel armPickup;
-    private final long armMaxEncoderCounts;
-    private final long armEncoderCountsPastPickup;
+    private final DigitalChannel armLimit;
+    private final int armLowPosition;
+    private final int armMediumPosition;
+    private final int armHighPosition;
     private final double armPower;
     private final double initialWristPosition;
+    private final double wristMinPosition;
+    private final double wristMaxPosition;
     private final double wristPower;
     private final double flapperForwardPower;
     private final double flapperReversePower;
@@ -24,10 +26,10 @@ public class FlySwatter implements Initializable {
     private double wristPosition;
 
     private enum ArmPosition {
+        LIMIT,
+        LOW,
+        MEDIUM,
         HIGH,
-        PICKUP,
-        MAX_LIMIT,
-        MIN_LIMIT,
         UNKNOWN;
 
         private int encoderCount;
@@ -42,13 +44,14 @@ public class FlySwatter implements Initializable {
             return String.format("position=%s encoderCount=%d", name(), encoderCount);
         }
     }
-    private ArmPosition armLastKnownPosition = ArmPosition.UNKNOWN;
 
     private enum ArmState {
         STOP,
+        LOW,
+        MEDIUM,
         HIGH,
-        PICKUP,
         MANUAL_CONTROL,
+        LIMITED,
         UNKNOWN
     }
     private ArmState armDesiredState = ArmState.UNKNOWN;
@@ -64,12 +67,14 @@ public class FlySwatter implements Initializable {
             final DcMotor arm,
             final Servo wrist,
             final DcMotor flapper,
-            final DigitalChannel armHigh,
-            final DigitalChannel armPickup,
-            final long armMaxEncoderCounts,
-            final long armEncoderCountsPastPickup,
+            final DigitalChannel armLimit,
+            final int armLowPosition,
+            final int armMediumPosition,
+            final int armHighPosition,
             final double armPower,
             final double initialWristPosition,
+            final double wristMinPosition,
+            final double wristMaxPosition,
             final double wristPower,
             final double flapperForwardPower,
             final double flapperReversePower
@@ -77,18 +82,19 @@ public class FlySwatter implements Initializable {
         this.arm = arm;
         this.wrist = wrist;
         this.flapper = flapper;
-        this.armMaxEncoderCounts = armMaxEncoderCounts;
-        this.armHigh = armHigh;
-        this.armPickup = armPickup;
-        this.armEncoderCountsPastPickup = armEncoderCountsPastPickup;
+        this.armLimit = armLimit;
+        this.armLowPosition = armLowPosition;
+        this.armMediumPosition = armMediumPosition;
+        this.armHighPosition = armHighPosition;
         this.armPower = armPower;
         this.initialWristPosition = initialWristPosition;
+        this.wristMinPosition = wristMinPosition;
+        this.wristMaxPosition = wristMaxPosition;
         this.wristPower = wristPower / 100;  // servos need really fine-grained control
         this.flapperForwardPower = flapperForwardPower;
         this.flapperReversePower = flapperReversePower;
 
-        this.armHigh.setMode(DigitalChannel.Mode.INPUT);
-        this.armPickup.setMode(DigitalChannel.Mode.INPUT);
+        this.armLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override
@@ -101,60 +107,44 @@ public class FlySwatter implements Initializable {
         wrist.setPosition(initialWristPosition);
         wristPosition = initialWristPosition;
     }
+    
+    public void arm(double power) {
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (power < 0 && !armLimit.getState()) {
+            armDesiredState = ArmState.LIMITED;
+            arm.setPower(0);
+        } else {
+            armDesiredState = ArmState.MANUAL_CONTROL;
+            arm.setPower(power);
+        }
+    }
+
+    public void armLow() {
+        armDesiredState = ArmState.LOW;
+        runArmToPosition(armLowPosition);
+    }
+
+    public void armMedium() {
+        armDesiredState = ArmState.MEDIUM;
+        runArmToPosition(armMediumPosition);
+    }
 
     public void armHigh() {
         armDesiredState = ArmState.HIGH;
-        if (getArmStateActual() == ArmPosition.HIGH) {
-            arm.setPower(0);
-        } else {
-            switch (armLastKnownPosition) {
-                case MAX_LIMIT:
-                case MIN_LIMIT:
-                    armStop();
-                    break;
-                case UNKNOWN:
-                    arm.setPower(armPower);
-                    break;
-                case HIGH:
-                    // We drive down when last-seen is high because middle is closer to high than pickup
-                case PICKUP:
-                    arm.setPower(-armPower);
-                    break;
-            }
-        }
+        runArmToPosition(armHighPosition);
     }
-    
-    public void armPickup() {
-        armDesiredState = ArmState.PICKUP;
-        if (getArmStateActual() == ArmPosition.PICKUP) {
-            arm.setPower(0);
-        } else {
-            switch (armLastKnownPosition) {
-                case MAX_LIMIT:
-                case MIN_LIMIT:
-                    armStop();
-                    break;
-                case HIGH:
-                case UNKNOWN:
-                    arm.setPower(armPower);
-                    break;
-                case PICKUP:
-                    arm.setPower(-armPower);
-                    break;
-            }
-        }
-    }
-    
-    public void arm(double power) {
-        armDesiredState = ArmState.MANUAL_CONTROL;
-        arm.setPower(power);
+
+    private void runArmToPosition(int position) {
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(armPower);
+        arm.setTargetPosition(position);
     }
 
     public void armStop() {
         armDesiredState = ArmState.STOP;
         arm.setPower(0);
 
-        if (!armPickup.getState()) {
+        if (!armLimit.getState()) {
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -169,7 +159,7 @@ public class FlySwatter implements Initializable {
     }
 
     private void setWristPosition(double adjustment) {
-        wristPosition = Range.clip(wristPosition + adjustment, 0.1, 0.9);
+        wristPosition = Range.clip(wristPosition + adjustment, wristMinPosition, wristMaxPosition);
         wrist.setPosition(wristPosition);
     }
     
@@ -188,31 +178,27 @@ public class FlySwatter implements Initializable {
         flapperState = FlapperState.STOP;
     }
     
-    private ArmPosition getArmStateActual() {
+    private ArmPosition getArmPosition() {
         final int armCurrentPosition = arm.getCurrentPosition();
-        if (!armHigh.getState()) {
-            armLastKnownPosition = ArmPosition.HIGH.withEncoderCount(armCurrentPosition);
-            return armLastKnownPosition;
+        if (!armLimit.getState()) {
+            return ArmPosition.LIMIT.withEncoderCount(armCurrentPosition);
         }
-        if (!armPickup.getState()) {
-            armLastKnownPosition = ArmPosition.PICKUP.withEncoderCount(armCurrentPosition);
-            return armLastKnownPosition;
+        switch (armDesiredState) {
+            case LOW:
+                return ArmPosition.LOW.withEncoderCount(armCurrentPosition);
+            case MEDIUM:
+                return ArmPosition.MEDIUM.withEncoderCount(armCurrentPosition);
+            case HIGH:
+                return ArmPosition.HIGH.withEncoderCount(armCurrentPosition);
+            default:
+                return ArmPosition.UNKNOWN.withEncoderCount(armCurrentPosition);
         }
-        if (armCurrentPosition <= -armEncoderCountsPastPickup) {
-            armLastKnownPosition = ArmPosition.MIN_LIMIT.withEncoderCount(armCurrentPosition);
-            return armLastKnownPosition;
-        }
-        if (armCurrentPosition >= armMaxEncoderCounts) {
-            armLastKnownPosition = ArmPosition.MAX_LIMIT.withEncoderCount(armCurrentPosition);
-            return armLastKnownPosition;
-        }
-        return ArmPosition.UNKNOWN;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "ArmStateActual(%s)%n ArmDesiredState(%s)%n ArmLastKnownPosition(%s)%n Wrist(%.3f)%n Flapper(%s)%n",
-                getArmStateActual(), armDesiredState, armLastKnownPosition, wrist.getPosition(), flapperState);
+                "ArmPosition(%s)%n ArmDesiredState(%s)%n Wrist(%.3f)%n Flapper(%s)%n",
+                getArmPosition(), armDesiredState, wrist.getPosition(), flapperState);
     }
 }

@@ -93,6 +93,19 @@ public class FFTeleop extends OpMode {
 
         //Drivetrain*******************************************************
 
+        if (gamepad1.left_trigger > 0) {
+            // control the drive train at full speed
+            teleopDriver.setMaxSpeed(1f);
+        } else if (gamepad1.right_trigger > 0) {
+            teleopDriver.setMaxSpeed(.4f);
+        } else {
+            // control the drive train at 1/2 speed - Normal driving
+            teleopDriver.setMaxSpeed(.6f);
+        }
+
+        driveBackwardsToggle(joy1.toggle.back);
+
+        /*
         teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.BACKWARD);
         //Toggle Half Speed on the drivetrain
         if (gamepad1.left_trigger > 0) {
@@ -104,7 +117,7 @@ public class FFTeleop extends OpMode {
             // control the drive train at 1/2 speed - Normal driving
             teleopDriver.setMaxSpeed(.4f);
         }
-
+*/
         if (gamepad1.a && !gamepad1.x) {
             ffRobot.duckSpinner.setPower(.75);
         } else if (gamepad1.x && !gamepad1.a) {
@@ -114,10 +127,12 @@ public class FFTeleop extends OpMode {
         }
 
         // Arm
-        if (gamepad2.y) {
+        if (gamepad2.dpad_up) {
             ffRobot.flySwatter.armHigh();
-        } else if (gamepad2.b) {
-            ffRobot.flySwatter.armPickup();
+        } else if (gamepad2.dpad_left) {
+            ffRobot.flySwatter.armMedium();
+        } else if (gamepad2.dpad_down) {
+            ffRobot.flySwatter.armLow();
         } else if (Math.abs(gamepad2.right_stick_y) > 0.2) {
             ffRobot.flySwatter.arm(-(gamepad2.right_stick_y)); //-(gamepad2.right_stick_y)
         } else {
@@ -125,8 +140,8 @@ public class FFTeleop extends OpMode {
         }
 
         // Wrist
-        ffRobot.flySwatter.wristUp();
         if (gamepad2.left_bumper) {
+            ffRobot.flySwatter.wristUp();
         } else if (gamepad2.left_trigger > 0.5) {
             ffRobot.flySwatter.wristDown();
         }
@@ -147,6 +162,18 @@ public class FFTeleop extends OpMode {
         } else {
             ffRobot.extendi.setPower(0);
         }
+
+    }
+
+    private void driveBackwardsToggle(boolean toggle) {
+        if (toggle) {
+            teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.FORWARD);
+            telemetry.addData("Direction", "REVERSED");  // Yes, the robot is backwards
+        } else {
+            teleopDriver.tankDrive(gamepad1, TeleopDriver.Direction.BACKWARD);
+            telemetry.addData("Direction", "FORWARD");
+        }
+
     }
 }
 

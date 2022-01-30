@@ -11,14 +11,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
 @Autonomous
-@Disabled
 public class FFDistanceSensorTest extends LinearOpMode{
     private FreightFrenzyRobot ffRobot;
     EncoderAutoDriver encoderAutoDriver;
-
-
-
-
 
     @Override
     public void runOpMode() {
@@ -32,12 +27,13 @@ public class FFDistanceSensorTest extends LinearOpMode{
         encoderAutoDriver.setImu(ffRobot.imu);
         waitForStart();
 
+        ffRobot.flySwatter.armLow();
 
-        while(opModeIsActive()){
+        while(opModeIsActive()) {
          // telemetry.addData("LeftSensor: ", ffRobot.distance2.getDistance(DistanceUnit.INCH));
            //telemetry.addData("RightSensor: ", ffRobot.distance1.getDistance(DistanceUnit.INCH));
-           telemetry.update();
-
+            telemetry.addData("FlySwatter", ffRobot.flySwatter);
+            telemetry.update();
         }
     }
 }

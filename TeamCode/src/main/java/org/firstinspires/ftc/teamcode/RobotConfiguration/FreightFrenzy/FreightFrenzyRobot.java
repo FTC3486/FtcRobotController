@@ -29,8 +29,6 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         final DcMotor frontRight = hardwareMap.dcMotor.get("rightf");
         final DcMotor backRight = hardwareMap.dcMotor.get("rightr");
 
-        //final DcMotor extendi = hardwareMap.dcMotor.get("extendi");
-
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -55,18 +53,19 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         this.distance1 = hardwareMap.get(DistanceSensor.class, "distance1");
         this.distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
 
-        //
         this.flySwatter = new FlySwatter(
                 hardwareMap.dcMotor.get("arm"),
                 hardwareMap.servo.get("wrist"),
                 hardwareMap.dcMotor.get("flapper"),
-                hardwareMap.digitalChannel.get("armHigh"),
-                hardwareMap.digitalChannel.get("armPickup"),
-                9000L,  // low at ground
-                100L, // pickup at ground
-                .3,
-                .6,
-                .5,
+                hardwareMap.digitalChannel.get("armLimit"),
+                1000,
+                2000,
+                3000,
+                1.0,
+                .4,
+                .2,
+                .8,
+                .15,
                 1.0,
                 .5  // should still be positive
         );
