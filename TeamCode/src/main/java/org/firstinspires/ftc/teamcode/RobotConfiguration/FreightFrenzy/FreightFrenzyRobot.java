@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivable;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Drivetrain;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.Initializable;
 import org.firstinspires.ftc.teamcode.Subsystems.FlySwatter;
+import org.firstinspires.ftc.teamcode.Subsystems.ShippingElementFinder;
 
 public class FreightFrenzyRobot implements Drivable, Initializable {
     // Components
@@ -18,9 +20,7 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
     public final DcMotor duckSpinner;
     public final FlySwatter flySwatter;
     public final DcMotor extendi;
-
-    public final DistanceSensor distance1;
-    public final DistanceSensor distance2;
+    public final ShippingElementFinder shippingElementFinder;
 
     public FreightFrenzyRobot(HardwareMap hardwareMap) {
         // Drivetrain
@@ -29,16 +29,16 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         final DcMotor frontRight = hardwareMap.dcMotor.get("rightf");
         final DcMotor backRight = hardwareMap.dcMotor.get("rightr");
 
-        frontLeft.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         this.drivetrain = new Drivetrain.Builder()
-                .addLeftMotorWithEncoder(backRight)
-                .addLeftMotor(frontRight)
-                .addRightMotor(frontLeft)
-                .addRightMotorWithEncoder(backLeft)
+                .addLeftMotor(frontLeft)
+                .addLeftMotorWithEncoder(backLeft)
+                .addRightMotor(frontRight)
+                .addRightMotorWithEncoder(backRight)
                 .setGearRatio(1.2)
                 .build();
 
@@ -46,12 +46,10 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
         this.duckSpinner = hardwareMap.dcMotor.get("duckSpinner");
 
         this.extendi = hardwareMap.dcMotor.get("extendi");
+        this.extendi.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // imu
         this.imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        this.distance1 = hardwareMap.get(DistanceSensor.class, "distance1");
-        this.distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
 
         this.flySwatter = new FlySwatter(
                 hardwareMap.dcMotor.get("arm"),
@@ -60,19 +58,30 @@ public class FreightFrenzyRobot implements Drivable, Initializable {
                 hardwareMap.digitalChannel.get("armLimit"),
                 1000,
                 2000,
-                3000,
+                5100,
                 1.0,
-                .4,
-                .2,
+                0.1,
+                0.1,
                 .8,
                 .15,
                 1.0,
                 .5  // should still be positive
         );
+
+        this.shippingElementFinder = new ShippingElementFinder(
+                36,
+                hardwareMap.get(DistanceSensor.class, "distance4"),
+                hardwareMap.get(DistanceSensor.class, "distance2"),
+                hardwareMap.get(DistanceSensor.class, "distance1"),
+                hardwareMap.get(DistanceSensor.class, "distance3")
+        );
     }
 
     @Override
     public void initialize() {
+        this.extendi.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.extendi.setPower(0);
+
         this.imu.initialize(getImuParameters());
         this.flySwatter.initialize();
     }

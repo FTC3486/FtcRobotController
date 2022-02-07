@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
 //import org.openftc.revextensions2.ExpansionHubEx;
@@ -30,7 +29,7 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
  */
 
 @Autonomous (group = "Blue" )
-public class FFDistanceSensorTest2 extends LinearOpMode {
+public class FFAutoBlueParkFancy extends LinearOpMode {
 
     BNO055IMU               imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -58,7 +57,6 @@ public class FFDistanceSensorTest2 extends LinearOpMode {
         //leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
         waitForStart();
-        encoderAutoDriver.setPower(1);
 
         boolean leftActive = false;
         boolean rightActive = false;
@@ -76,11 +74,13 @@ public class FFDistanceSensorTest2 extends LinearOpMode {
 
         //move forward into parking thing
         //encoderAutoDriver.driveStraight(15, 0.4, hardwareMap);
+//        ffRobot.flySwatter.arm.setPower(1);
+        sleep(2000);
+//        ffRobot.flySwatter.arm.setPower(0);
 
-      telemetry.addData("Distance1: ", ffRobot.distance1.getDistance(DistanceUnit.INCH));
-      telemetry.addData("Distance2: ", ffRobot.distance2.getDistance(DistanceUnit.INCH));
+        encoderAutoDriver.driveToDistance(-15, 0.4);
         telemetry.update();
-
+        sleep(5000);
 
 
     }

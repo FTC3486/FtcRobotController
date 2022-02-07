@@ -147,7 +147,6 @@ public class UltimateGoalAutoBlue extends LinearOpMode {
         telemetry.addData("Right Encoder", ultimateGoalRobot.getDrivetrain().getRightEncoderCount());
         telemetry.addData("IMU", getAngle());
         updateTelemetry(telemetry);
-        encoderAutoDriver.setPower(1);
         String comp = pipeline.state();
         resetAngle();
         // comp.equals("NONE")

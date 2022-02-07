@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
 //import org.openftc.revextensions2.ExpansionHubEx;
@@ -14,17 +15,8 @@ import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
     Filename: UltimateGoalAutoBlue.java
     Description:
         Autonomous program for the Ultimate Goal season on the Blue team.
-    Use:
-        Deliver Wobble Goal and Park
-    Requirements:
- *     - AutoDrive configured for stall monitor
- *     - Drive motors with encoders
- *     - Two Range sensors
- *     - one color sensor
- *     -Jewel armVertical
- * *
- * Changelog:
- *     -Created by Saatvik on 12/22/20.
+
+  * Changelog:
  *     -
  */
 
@@ -57,7 +49,6 @@ public class FFAutoBluePark extends LinearOpMode {
         //leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
         waitForStart();
-        encoderAutoDriver.setPower(1);
 
         boolean leftActive = false;
         boolean rightActive = false;
@@ -75,9 +66,92 @@ public class FFAutoBluePark extends LinearOpMode {
 
         //move forward into parking thing
         //encoderAutoDriver.driveStraight(15, 0.4, hardwareMap);
-        encoderAutoDriver.driveToDistance(-15, 0.4);
+        /*
+        int markerPos;
+
+        int i = 0;
+        int pos1 = 0;
+        int pos2 = 0;
+        int pos3 = 0;
+
+        while((i < 100) && opModeIsActive())
+        {
+            double dis1 = ffRobot.distance1.getDistance(DistanceUnit.INCH);
+            double dis2 = ffRobot.distance3.getDistance(DistanceUnit.INCH);
+
+            if ((dis1 < 12) && (dis2  > 12)) {
+                pos1++;
+            } else if ((dis1 > 12) && (dis2  < 12)) {
+                pos2++;
+            } else {
+                pos3++;
+            }
+            telemetry.addData("pos1: ", pos1);
+            telemetry.addData("pos2: ", pos2);
+            telemetry.addData("pos3: ", pos3);
+            telemetry.addData("distance2: ", dis2);
+            telemetry.addData("distance1: ", dis1);
+            telemetry.update();
+            i++;
+        }
+
+        if((pos1 > pos2) && (pos1 > pos3))
+        {
+            markerPos = 1;
+        }
+        else if((pos2 > pos1) && (pos2 > pos3))
+        {
+            markerPos = 2;
+        }
+        else if((pos3 > pos1) && (pos3 > pos2))
+        {
+            markerPos = 3;
+        }
+        else {
+            markerPos = 3;
+        }
+        */
+
+
+        //ffRobot.flySwatter.arm.setPower(1);
+       // sleep(2000);
+        //ffRobot.flySwatter.arm.setPower(0);
+
+        //ffRobot.flySwatter.wrist.setPosition(0.4);
+
+        encoderAutoDriver.turnRight(9, 0.1, 0.6);
+
+        encoderAutoDriver.driveToDistance(6, 0.6);
+
+        encoderAutoDriver.rotateClockwise(90, hardwareMap);
+
+//        double armPos = ffRobot.flySwatter.arm.getCurrentPosition();
+//
+//        while(ffRobot.flySwatter.arm.getCurrentPosition() < 5100)
+//        {
+//            ffRobot.flySwatter.arm.setPower(0.9);
+//        }
+//
+//        ffRobot.flySwatter.arm.setPower(0);
+
+        // what we need:
+        // ffRobot.flySwatter.wrist.setPosition(0.800);
+
+       //encoderAutoDriver.rotateClockwise(180, hardwareMap);
+
+        //encoderAutoDriver.driveToDistance(5, .6);
+        /*
+        ffRobot.flySwatter.flapperForward();
+        sleep(1000);
+        ffRobot.flySwatter.flapperStop();
+
+        encoderAutoDriver.turnRight(10, 0.6, 0);
+
+        encoderAutoDriver.driveToDistance(15, 0.4);
         telemetry.update();
         sleep(5000);
+        */
+
 
 
     }

@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotConfiguration.FreightFrenzy.FreightFrenzyRobot;
 import org.firstinspires.ftc.teamcode.RobotCoreExtensions.EncoderAutoDriver;
+import org.firstinspires.ftc.teamcode.Subsystems.ShippingElementFinder;
 
 @Autonomous(group = "Red")
-public class FFAutoRedPark extends LinearOpMode {
+public class FFAutoRedGoalPark extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -16,9 +17,33 @@ public class FFAutoRedPark extends LinearOpMode {
         encoderAutoDriver.setImu(ffRobot.imu);
         ffRobot.initialize();
 
-        waitForStart();
+        while (!isStarted()) {
+            telemetry.addData("Goal Position", ffRobot.shippingElementFinder.findGoalPosition(
+                    ShippingElementFinder.Color.RED,
+                    ShippingElementFinder.Side.BARRIER));
+            telemetry.update();
+        }
+
+        // Read Sensors
+
+        final ShippingElementFinder.GoalPosition goalPosition = ffRobot.shippingElementFinder.findGoalPosition(
+                ShippingElementFinder.Color.RED,
+                ShippingElementFinder.Side.BARRIER);
 
         // DO MOVEMENT
+
+        switch (goalPosition) {
+            case LOW:
+
+                break;
+            case MEDIUM:
+
+                break;
+            case HIGH:
+
+                break;
+        }
+
 
         // move forward into parking thing
         encoderAutoDriver.driveToDistance(15, 0.4);

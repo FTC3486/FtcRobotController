@@ -58,7 +58,6 @@ public class FFAutoBlueDuck extends LinearOpMode {
         //leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
         waitForStart();
-        encoderAutoDriver.setPower(1);
 
         boolean leftActive = false;
         boolean rightActive = false;
@@ -83,62 +82,61 @@ public class FFAutoBlueDuck extends LinearOpMode {
         int pos2 = 0;
         int pos3 = 0;
 
-        while((i < 100) && opModeIsActive())
-        {
-            double dis1 = ffRobot.distance1.getDistance(DistanceUnit.INCH);
-            double dis2 = ffRobot.distance2.getDistance(DistanceUnit.INCH);
+        while((i < 100) && opModeIsActive()) {
+//            double dis1 = ffRobot.distance1.getDistance(DistanceUnit.INCH);
+//            double dis2 = ffRobot.distance2.getDistance(DistanceUnit.INCH);
+//
+//            if ((dis1 < 12) && (dis2  > 12)) {
+//                pos1++;
+//            } else if ((dis1 > 12) && (dis2  < 12)) {
+//                pos2++;
+//            } else {
+//                pos3++;
+//            }
+//            telemetry.addData("pos1: ", pos1);
+//            telemetry.addData("pos2: ", pos2);
+//            telemetry.addData("pos3: ", pos3);
+//            telemetry.addData("distance2: ", dis2);
+//            telemetry.addData("distance1: ", dis1);
+//            telemetry.update();
+//            i++;
+//        }
+//
+//        if((pos1 > pos2) && (pos1 > pos3))
+//        {
+//            markerPos = 1;
+//        }
+//        else if((pos2 > pos1) && (pos2 > pos3))
+//        {
+//            markerPos = 2;
+//        }
+//        else if((pos3 > pos1) && (pos3 > pos2))
+//        {
+//            markerPos = 3;
+//        }
+//        else {
+//            markerPos = 3;
+//        }
+//        telemetry.addData("markerPos: ", markerPos);
+//        telemetry.update();
+//        sleep(5000);
+//
+//        encoderAutoDriver.driveToDistance(1, 0.4);
+//        ffRobot.duckSpinner.setPower(0.9);
+//        sleep(2000);
+//        ffRobot.duckSpinner.setPower(0);
+//        encoderAutoDriver.driveToDistance(1.5, 0.4);
+//        /*
+//        encoderAutoDriver.rotateGlobal(-45, hardwareMap);
+//        encoderAutoDriver.driveToDistance(-15, 0.4);
+//        encoderAutoDriver.driveToDistance(2, 0.4);
+//        encoderAutoDriver.driveToDistance(-1, 0.4);
+//
+//         */
 
-            if ((dis1 < 12) && (dis2  > 12)) {
-                pos1++;
-            } else if ((dis1 > 12) && (dis2  < 12)) {
-                pos2++;
-            } else {
-                pos3++;
-            }
-            telemetry.addData("pos1: ", pos1);
-            telemetry.addData("pos2: ", pos2);
-            telemetry.addData("pos3: ", pos3);
-            telemetry.addData("distance2: ", dis2);
-            telemetry.addData("distance1: ", dis1);
             telemetry.update();
-            i++;
+            sleep(5000);
+
         }
-
-        if((pos1 > pos2) && (pos1 > pos3))
-        {
-            markerPos = 1;
-        }
-        else if((pos2 > pos1) && (pos2 > pos3))
-        {
-            markerPos = 2;
-        }
-        else if((pos3 > pos1) && (pos3 > pos2))
-        {
-            markerPos = 3;
-        }
-        else {
-            markerPos = 3;
-        }
-        telemetry.addData("markerPos: ", markerPos);
-        telemetry.update();
-        sleep(5000);
-
-        encoderAutoDriver.driveToDistance(1, 0.4);
-        ffRobot.duckSpinner.setPower(0.9);
-        sleep(2000);
-        ffRobot.duckSpinner.setPower(0);
-        encoderAutoDriver.driveToDistance(1.5, 0.4);
-        /*
-        encoderAutoDriver.rotateGlobal(-45, hardwareMap);
-        encoderAutoDriver.driveToDistance(-15, 0.4);
-        encoderAutoDriver.driveToDistance(2, 0.4);
-        encoderAutoDriver.driveToDistance(-1, 0.4);
-
-         */
-
-        telemetry.update();
-        sleep(5000);
-
-
     }
 }

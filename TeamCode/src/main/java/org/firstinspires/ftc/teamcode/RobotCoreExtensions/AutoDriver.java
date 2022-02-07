@@ -95,14 +95,6 @@ public abstract class AutoDriver implements StallMonitor.EmergencyStoppable {
         isStallMonitoringEnabled = false;
     }
 
-    public double getPower() {
-        return power;
-    }
-
-    public void setPower(double power) {
-        this.power = power;
-    }
-
 
     // Drive methods that are sensor-agnostic
 

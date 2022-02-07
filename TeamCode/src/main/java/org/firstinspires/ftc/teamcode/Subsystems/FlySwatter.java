@@ -135,9 +135,9 @@ public class FlySwatter implements Initializable {
     }
 
     private void runArmToPosition(int position) {
+        arm.setTargetPosition(position);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(armPower);
-        arm.setTargetPosition(position);
     }
 
     public void armStop() {

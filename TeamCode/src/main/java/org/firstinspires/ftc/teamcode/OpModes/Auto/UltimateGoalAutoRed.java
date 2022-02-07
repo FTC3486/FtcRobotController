@@ -143,7 +143,6 @@ public class UltimateGoalAutoRed extends LinearOpMode {
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
         }
-        encoderAutoDriver.setPower(1);
         String comp = pipeline.state();
         resetAngle();
          if (comp.equals("NONE")) {

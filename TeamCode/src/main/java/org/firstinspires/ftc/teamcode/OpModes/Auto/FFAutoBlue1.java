@@ -64,7 +64,6 @@ public class FFAutoBlue1 extends LinearOpMode {
         leftr = (ExpansionHubMotor) hardwareMap.dcMotor.get("leftr");
 
         waitForStart();
-        encoderAutoDriver.setPower(1);
 
         boolean leftActive = false;
         boolean rightActive = false;
